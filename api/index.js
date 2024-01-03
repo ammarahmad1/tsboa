@@ -51,7 +51,7 @@ app.use('/api/posting', postingRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/news', newsRouter);
 app.use('/api/events', eventRouter);
-app.use(express.static(path.join(__dirname, '/tsboa-final/dist')));
+app.use(express.static(path.join(__dirname, '../tsboa-final/build')));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'tsboa-final', 'public', 'index.html'));

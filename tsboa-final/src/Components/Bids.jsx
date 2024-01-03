@@ -4,20 +4,24 @@ import bidthumbnail from './Images/bidthumbnail.jpg'
 import { useSelector } from 'react-redux';
 import React from 'react';
 import axios from 'axios';
+import Loading from './Loading'; 
 
 const Bids = () => {
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const [showPostingsError, setShowPostingsError] = useState(false);
   const [postings, setPostings] = useState([]);
   const [userPostings, setUserPostings] = useState([]);
+  const [loadingPostings, setLoadingPostings] = useState(true);
   const navigate = useNavigate();
   useEffect(() => {
     const fetchPostings = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/posting/get');
         setPostings(response.data);
+        setLoadingPostings(false);  
       } catch (error) {
         console.error('Error fetching postings:', error);
+        setLoadingPostings(false);
       }
     };
 
@@ -112,32 +116,36 @@ const Bids = () => {
       </Link>
     </div>
     <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 mt-10">
-        {postings.map((posting) => (
-          <div key={posting._id} className="w-full bg-white flex-none rounded-lg overflow-hidden">
-            {/* Posting Image */}
-            <div
-              className="w-full h-[240px] bg-cover bg-center rounded-lg"
-              style={{ backgroundImage: `url(${posting.imageUrls[0]})` }}
-            ></div>
-            {/* Posting Details */}
-            <div className="py-4 gap-4 text-left">
-              {/* Posting Title */}
-              <div className='flex justify-between'>
-                <h2 className="text-lg font-semibold">{posting.bidTitle}</h2>
-                {/* Bid Now Button */}
-                <button
-                  type="button"
-                  onClick={() => handleBidClick(posting._id)}
-                  className="flex-none rounded-md bg-[#0E214B] px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-                >
-                  Bid Now
-                </button>
+        {loadingPostings ? (
+          <Loading /> // Show loading component while waiting for data
+        ) : (
+          postings.map((posting) => (
+            <div key={posting._id} className="w-full bg-white flex-none rounded-lg overflow-hidden">
+              {/* Posting Image */}
+              <div
+                className="w-full h-[240px] bg-cover bg-center rounded-lg"
+                style={{ backgroundImage: `url(${posting.imageUrls[0]})` }}
+              ></div>
+              {/* Posting Details */}
+              <div className="py-4 gap-4 text-left">
+                {/* Posting Title */}
+                <div className='flex justify-between'>
+                  <h2 className="text-lg font-semibold">{posting.bidTitle}</h2>
+                  {/* Bid Now Button */}
+                  <button
+                    type="button"
+                    onClick={() => handleBidClick(posting._id)}
+                    className="flex-none rounded-md bg-[#0E214B] px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                  >
+                    Bid Now
+                  </button>
+                </div>
+                {/* Posting Information */}
+                <p className="text-sm pt-4">{posting.description}</p>
               </div>
-              {/* Posting Information */}
-              <p className="text-sm pt-4">{posting.description}</p>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
       <button

@@ -2,10 +2,12 @@ import React from 'react';
 import blogwriter1 from './Images/blog1.jpg';
 import blogwriter2 from './Images/blog2.jpg';
 import blogwriter3 from './Images/blog3.jpg';
+import { Link } from 'react-router-dom';
 
 const Articles = () => {
   return (
     <div className="bg-white py-24 sm:py-32">
+      <Link to="/newspage">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div>
           <div className="max-w-[1216px] min-h-[124px]  mx-auto">
@@ -124,6 +126,7 @@ const Articles = () => {
           </article>
         </div>
       </div>
+      </Link>
     </div>
   );
 };

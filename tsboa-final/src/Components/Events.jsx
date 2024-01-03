@@ -9,7 +9,7 @@ const Events = () => {
   useEffect(() => {
     const fetchRandomEvents = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/events/get');
+        const response = await axios.get('/api/events/get');
         const data = response.data;
         console.log(data);
         if (data.success === false) {

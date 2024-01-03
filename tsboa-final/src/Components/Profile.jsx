@@ -75,7 +75,7 @@ export default function Profile() {
     e.preventDefault();
     try {
       dispatch(updateUserStart());
-      const res = await axios.post(`http://localhost:5000/api/user/update/${currentUser._id}`, {
+      const res = await axios.post(`/api/user/update/${currentUser._id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

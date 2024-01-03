@@ -17,7 +17,7 @@ const EventsPageprac = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/events/get');
+        const response = await axios.get('/api/events/get');
         const data = response.data;
         if (data.success === false) {
           console.log(data.message);

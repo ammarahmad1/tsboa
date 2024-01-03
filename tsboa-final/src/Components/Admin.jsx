@@ -144,7 +144,7 @@ const Admin = () => {
     e.preventDefault();
     try {
       // Make API call to create event
-      const response = await axios.post('http://localhost:5000/api/events/create', eventFormData);
+      const response = await axios.post('/api/events/create', eventFormData);
       console.log('Event created:', response.data);
       // Clear form data or perform any other actions
       setSuccessMessage('Event created successfully!');
@@ -159,7 +159,7 @@ const Admin = () => {
     e.preventDefault();
     try {
       // Make API call to create news
-      const response = await axios.post('http://localhost:5000/api/news/create', newsFormData);
+      const response = await axios.post('/api/news/create', newsFormData);
       console.log('News created:', response.data);
       setSuccessMessage('News created successfully!');
       // Clear form data or perform any other actions

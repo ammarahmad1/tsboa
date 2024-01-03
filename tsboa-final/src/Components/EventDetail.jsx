@@ -30,7 +30,7 @@ const EventDetail = () => {
         setLoading(true);
 
         // Use Axios to fetch event details
-        const response = await axios.get(`http://localhost:5000/api/events/get/${params.eventId}`);
+        const response = await axios.get(`/api/events/get/${params.eventId}`);
         console.log(response)
         const data = response.data;
 

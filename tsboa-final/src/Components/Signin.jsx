@@ -30,7 +30,7 @@ const Signin = () => {
     dispatch(signInStart());
   
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/signin', formData, {
+      const response = await axios.post('/api/auth/signin', formData, {
         headers: {
           'Content-Type': 'application/json',
         },

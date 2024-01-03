@@ -16,7 +16,7 @@ const NewsDetail = () => {
   useEffect(() => {
     const fetchNewsDetail = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/news/get/${params.newsId}`);
+        const response = await axios.get(`/api/news/get/${params.newsId}`);
         setNews(response.data);
       } catch (error) {
         console.error('Error fetching news details:', error);

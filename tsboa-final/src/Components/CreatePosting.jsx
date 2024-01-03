@@ -127,7 +127,7 @@ export default function CreatePosting() {
       setLoading(true);
       setError(false);
       
-      const response = await axios.post('http://localhost:5000/api/posting/create', formData, {
+      const response = await axios.post('/api/posting/create', formData, {
         headers: {
           'Content-Type': 'application/json',
         },

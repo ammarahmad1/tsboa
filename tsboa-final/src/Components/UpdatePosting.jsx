@@ -38,7 +38,7 @@ export default function UpdatePosting() {
     useEffect(()=> {
         const fetchPosting = async () => {
             const postingId = params.postingId;
-            const response = await axios.get(`http://localhost:5000/api/posting/get/${postingId}`);
+            const response = await axios.get(`/api/posting/get/${postingId}`);
             const data = response.data;
           
             if (data.success === false) {
@@ -143,7 +143,7 @@ export default function UpdatePosting() {
         setLoading(true);
         setError(false);
         console.log(formData);
-        const response = await axios.post(`http://localhost:5000/api/posting/update/${params.postingId}`, formData, {
+        const response = await axios.post(`/api/posting/update/${params.postingId}`, formData, {
           headers: {
             'Content-Type': 'application/json',
           },

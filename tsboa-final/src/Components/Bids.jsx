@@ -16,7 +16,7 @@ const Bids = () => {
   useEffect(() => {
     const fetchPostings = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/posting/get');
+        const response = await axios.get('/api/posting/get');
         setPostings(response.data);
         setLoadingPostings(false);  
       } catch (error) {
@@ -37,7 +37,7 @@ const Bids = () => {
   const handleShowPostings = async () => {
     try {
       setShowPostingsError(false);
-      const res = await fetch(`http://localhost:5000/api/user/posting/${currentUser._id}`);
+      const res = await fetch(`/api/user/posting/${currentUser._id}`);
       const data = await res.json();
       if (data.success === false) {
         setShowPostingsError(true);

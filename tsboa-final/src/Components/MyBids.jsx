@@ -22,7 +22,7 @@ const MyBids = () => {
   const handleShowPostings = async () => {
     try {
       setShowPostingsError(false);
-      const response = await axios.get(`http://localhost:5000/api/user/postings/${currentUser._id}`, {
+      const response = await axios.get(`/api/user/postings/${currentUser._id}`, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -44,7 +44,7 @@ const MyBids = () => {
 
   const handlePostingDelete  = async (postingId) => {
     try {
-      const response = await axios.delete(`http://localhost:5000/api/posting/delete/${postingId}`);
+      const response = await axios.delete(`/api/posting/delete/${postingId}`);
       const data = response.data;
     
       if (data.success === false) {

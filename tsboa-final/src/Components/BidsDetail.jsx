@@ -30,7 +30,7 @@
       const fetchPosting = async () => {
         try {
           setLoading(true);
-          const response = await axios.get(`http://localhost:5000/api/posting/get/${params.postingId}`);
+          const response = await axios.get(`/api/posting/get/${params.postingId}`);
           console.log(response)
           const data = response.data;
           console.log(data)

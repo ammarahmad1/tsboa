@@ -1,12 +1,13 @@
-import newsthumbnail1 from './Images/newsthumbnail.jpg';
+import newsthumbnail1 from './Images/newsthumbnail1.jpg';
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Loading from './Loading'; 
 
 const NewsPage = () => {
   const [news, setNews] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchNews = async () => {
       try {
@@ -20,6 +21,7 @@ const NewsPage = () => {
         }
 
         setNews(data || []); // Ensure that news is an array or default to an empty array
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching news:', error);
         // Handle error if needed
@@ -35,6 +37,10 @@ const NewsPage = () => {
       <div className='max-w-[1512px] max-h-[206px] align-middle top-[96px]   gap-64'>
         <h2 className='text-lg font-semibold font-inter text-center leading-10 tracking-tighter'>News</h2>
       </div>
+
+      {loading ? (
+        <Loading /> // Show loading component while waiting for data
+      ) : (
 
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 mt-10">
         {news.map((news) => (
@@ -52,10 +58,11 @@ const NewsPage = () => {
 
               {/* News Description */}
               <p className="text-sm">{news.description}</p>
-            </div>
-          </Link>
-        ))}
-      </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

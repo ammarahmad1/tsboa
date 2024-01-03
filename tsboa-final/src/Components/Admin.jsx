@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Admin = () => {
   const navigate = useNavigate();
+  const [successMessage, setSuccessMessage] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
   console.log(currentUser._id)
   const [imageUploadError, setImageUploadError] = useState(false);
@@ -145,7 +146,8 @@ const Admin = () => {
       // Make API call to create event
       const response = await axios.post('http://localhost:5000/api/events/create', eventFormData);
       console.log('Event created:', response.data);
-      
+      // Clear form data or perform any other actions
+      setSuccessMessage('Event created successfully!');
       // Clear form data or perform any other actions
     } catch (error) {
       console.error('Error creating event:', error.response?.data || error.message);
@@ -159,6 +161,7 @@ const Admin = () => {
       // Make API call to create news
       const response = await axios.post('http://localhost:5000/api/news/create', newsFormData);
       console.log('News created:', response.data);
+      setSuccessMessage('News created successfully!');
       // Clear form data or perform any other actions
     } catch (error) {
       console.error('Error creating news:', error.response?.data || error.message);
@@ -178,7 +181,12 @@ const Admin = () => {
   return (
     <div className="container mx-auto p-8 bg-gray-100 rounded-md shadow-lg">
       <h2 className="text-3xl font-bold mb-6 text-gray-800">Admin Panel</h2>
-
+      {successMessage && (
+        <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+          <p className="font-bold">Success:</p>
+          <p>{successMessage}</p>
+        </div>
+      )}
       {/* Event creation form */}
       <form onSubmit={handleEventSubmit} className="mb-8 p-6 bg-white rounded-md shadow-md">
         <h3 className="text-xl font-bold mb-4 text-gray-700">Create Event</h3>
@@ -255,23 +263,24 @@ const Admin = () => {
             />
           </div>
           <div className='flex gap-4'>
-            <input
-              onChange={(e) => setFiles(e.target.files)}
-              className='p-3 border border-gray-300 rounded w-full'
-              type='file'
-              id='images'
-              accept='image/*'
-              multiple
-            />
-           <button
-              type="button"
-              disabled={uploading}
-              onClick={handleImageSubmit}
-              className="p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80"
-            >
-              {uploading ? 'Uploading...' : 'Upload'}
-            </button>
-          </div>
+        <input
+          onChange={(e) => setFiles(e.target.files)}
+          className='p-3 border border-gray-300 rounded w-full'
+          type='file'
+          id='images'
+          accept='image/*'
+          multiple
+        />
+        <p className='text-gray-600'>Picture should be of size 2160 x 1259 pixels</p>
+        <button
+          type="button"
+          disabled={uploading}
+          onClick={handleImageSubmit}
+          className="p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80"
+        >
+          {uploading ? 'Uploading...' : 'Upload'}
+        </button>
+      </div>
           <p className='text-red-700 text-sm'>
             {imageUploadError && imageUploadError}
           </p>

@@ -35,19 +35,33 @@ const Signin = () => {
           'Content-Type': 'application/json',
         },
       });
+      
+      if (!response) {
+        throw new Error('Response object is undefined.');
+      }
+  
       const data = response.data;
       console.log(data)
       if (data.success === false) {
-        dispatch(signInFailure(data.message));
+        if (data.message === 'Invalid credentials') {
+          dispatch(signInFailure('Wrong credentials'));
+        } else {
+          dispatch(signInFailure(data.message));
+        }
         return;
       }
+      
       dispatch(signInSuccess(data));
       navigate('/');
     } catch (error) {
-      dispatch(signInFailure(error.message));
+      console.error('Error during signin:', error);
+  
+      // Check if the error object has a response property and extract the message
+      const errorMessage = error.response?.data?.message || 'An error occurred while signing in.';
+      
+      dispatch(signInFailure(errorMessage));
     }
   };
-
   
   return (
     <>

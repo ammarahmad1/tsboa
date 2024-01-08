@@ -35,22 +35,14 @@ const Signin = () => {
           'Content-Type': 'application/json',
         },
       });
-      
-      if (!response) {
-        throw new Error('Response object is undefined.');
-      }
+      const data = await response.data;
+      console.log(data);
   
-      const data = response.data;
-      console.log(data)
       if (data.success === false) {
-        if (data.message === 'Invalid credentials') {
-          dispatch(signInFailure('Wrong credentials'));
-        } else {
-          dispatch(signInFailure(data.message));
-        }
+        dispatch(signInFailure(data.message));
         return;
       }
-      
+  
       dispatch(signInSuccess(data));
       navigate('/');
     } catch (error) {
@@ -58,10 +50,11 @@ const Signin = () => {
   
       // Check if the error object has a response property and extract the message
       const errorMessage = error.response?.data?.message || 'An error occurred while signing in.';
-      
+  
       dispatch(signInFailure(errorMessage));
     }
   };
+  
   
   return (
     <>
@@ -136,7 +129,7 @@ const Signin = () => {
             </div>
               <div className="mt-6">
           {error && (
-            <div className="text-center text-sm text-red-500">
+            <div >
             {error.response.data.message || 'An error occurred while signing in.'}
           </div>
           )}

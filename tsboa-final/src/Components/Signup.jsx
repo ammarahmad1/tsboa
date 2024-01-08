@@ -49,7 +49,7 @@ const Signup = () => {
     } catch (error) {
       console.error('Error signing up:', error);
       console.error('Error response from server:', error.response.data);
-      setError('Unable to sign up. Please check your input and try again.'); // Set error message
+      setError('Unable to sign up. Please check your input and try again.');  
     } finally {
       setLoading(false); // Set loading back to false
     }

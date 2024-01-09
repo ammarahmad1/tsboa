@@ -26,35 +26,34 @@ const Signin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     dispatch(signInStart());
-  
+
     try {
       const response = await axios.post('/api/auth/signin', formData, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
-      const data = await response.data;
+
+      const { data } = response;
       console.log(data);
-  
+
       if (data.success === false) {
         dispatch(signInFailure(data.message));
-        return;
+      } else {
+        dispatch(signInSuccess(data));
+        navigate('/');
       }
-  
-      dispatch(signInSuccess(data));
-      navigate('/');
     } catch (error) {
       console.error('Error during signin:', error);
-  
+
       // Check if the error object has a response property and extract the message
       const errorMessage = error.response?.data?.message || 'An error occurred while signing in.';
-  
+
       dispatch(signInFailure(errorMessage));
     }
   };
-  
   
   return (
     <>
@@ -127,13 +126,13 @@ const Signin = () => {
                 Sign in
               </button>
             </div>
-              <div className="mt-6">
-          {error && (
-            <div >
-            {error.response.data.message || 'An error occurred while signing in.'}
-          </div>
-          )}
-         </div> 
+            <div className="mt-6">
+              {error && (
+                <div className="text-center text-sm text-red-500">
+                  {error}
+                </div>
+              )}
+         </div>
           </form>
 
           <div className="mt-6">

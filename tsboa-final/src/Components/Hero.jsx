@@ -8,7 +8,7 @@ const HeroSection = () => {
         {/* Mobile View */}
         <div className="lg:hidden px-4">
           <div className="text-left my-20">
-            <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl ">Empowering Business Owners in the Political Arena </p>
+            <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl ">Empowering Business Owners in the Political </p>
             <p className="mt-6 text-lg leading-8 text-gray-600">Your Gateway to Informed Decision-Making and Active Participation.</p>
           
             <div className="flex w-full h-[48px] gap-4 mt-3">

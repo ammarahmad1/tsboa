@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import logoImage from './Images/logo.png';
 import {useSelector} from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
   deleteUserFailure,
@@ -13,7 +13,7 @@ import {
 } from '../redux/user/userSlice';
 
 const Navbar = () => {
-  const navigate = useNavigate();
+
   const dispatch = useDispatch(); 
   const { currentUser } = useSelector((state) => state.user);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -21,11 +21,16 @@ const Navbar = () => {
   const handleSignOut = async () => {
     try {
       dispatch(signOutUserStart());
-      await axios.get('/api/auth/signout');
-      dispatch(deleteUserSuccess()); 
-      navigate('/');
+      const response = await axios.get('/api/auth/signout');
+      const data = response.data;
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message));
+        return;
+      }
+      dispatch(deleteUserSuccess(data));
+      
     } catch (error) {
-      dispatch(deleteUserFailure(error.message));
+      dispatch(deleteUserFailure(error.message));  // Fix: Use error.message instead of data.message
     }
   };
 

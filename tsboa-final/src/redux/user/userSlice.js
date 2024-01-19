@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     currentUser: null,
     error: null,
+    isLoggedIn: false,
     loading: false,
   };
 
@@ -16,6 +17,7 @@ const initialState = {
       },
       signInSuccess: (state, action) => {
         state.currentUser = action.payload;
+        state.isLoggedIn = true;
         state.loading = false;
         state.error = null;
       },
@@ -31,6 +33,7 @@ const initialState = {
       },
       deleteUserSuccess: (state) => {
         state.currentUser = null;
+        state.isLoggedIn = false;
         state.loading = false;
         state.error = null;
       },
@@ -43,6 +46,7 @@ const initialState = {
       },
       signOutUserSuccess: (state) => {
         state.currentUser = null;
+        state.isLoggedIn = false;
         state.loading = false;
         state.error = null;
       },

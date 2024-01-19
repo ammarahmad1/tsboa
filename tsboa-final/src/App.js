@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import { useSelector } from 'react-redux';
 import Navbar from './Components/Navbar';
 import Footer from './Components/Footer';
 import EventsPage from './Components/EventsPage';
@@ -24,16 +25,17 @@ import CreatePosting from './Components/CreatePosting';
 import MissingPage from './Components/MissingPage';
 import UpdatePosting from './Components/UpdatePosting';
 import Admin from './Components/Admin';
+import Homepagesignin from './Components/Homepagesignin';
 
 function App() {
- 
+  const { isLoggedIn } = useSelector((state) => state.user);
+
   return (
     <div className="App">
       <Navbar />
       <Routes>
         {/* Public routes */}
-          <Route path="/" element={<HomePage />} />
-         
+          <Route path="/" element={isLoggedIn ? <Homepagesignin /> : <HomePage />} />
           <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/resetpassword" element={<ResetPassword />} />

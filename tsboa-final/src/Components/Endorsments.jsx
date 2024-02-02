@@ -71,7 +71,7 @@ const Endorsments = () => {
         </div>
       </Link>
         {/*News Card2 */}
-        <Link to="/newsdetail" className="w-full bg-white p-3 border border-gray flex-none rounded-lg overflow-hidden " >
+        <Link to="/endorsmentdetail" className="w-full bg-white p-3 border border-gray flex-none rounded-lg overflow-hidden " >
           {/* Event Image */}
           <div className="w-full h-[240px] bg-cover bg-center rounded-lg" style={{ backgroundImage: `url(${endorsmentthumbnail2})` }}>
             
@@ -98,7 +98,7 @@ const Endorsments = () => {
         </Link>
 
         {/*News Card3 */}
-        <Link to="/newsdetail" className="w-full bg-white p-3 border border-gray flex-none rounded-lg overflow-hidden " >
+        <Link to="/endorsmentdetail" className="w-full bg-white p-3 border border-gray flex-none rounded-lg overflow-hidden " >
           {/* Event Image */}
           <div className="w-full h-[240px] bg-cover bg-center rounded-lg" style={{ backgroundImage: `url(${endorsmentthumbnail3})` }}>
             
@@ -125,7 +125,7 @@ const Endorsments = () => {
         </Link>
 
         {/*News Card4 */}
-        <Link to="/newsdetail" className="w-full bg-white p-3 border border-gray flex-none rounded-lg overflow-hidden " >
+        <Link to="/endorsmentdetail" className="w-full bg-white p-3 border border-gray flex-none rounded-lg overflow-hidden " >
           {/* Event Image */}
           <div className="w-full h-[240px] bg-cover bg-center rounded-lg" style={{ backgroundImage: `url(${endorsmentthumbnail4})` }}>
             
@@ -152,7 +152,7 @@ const Endorsments = () => {
         </Link>
 
         {/*News Card5 */}
-        <Link to="/newsdetail" className="w-full bg-white p-3 border border-gray flex-none rounded-lg overflow-hidden " >
+        <Link to="/endorsmentdetail" className="w-full bg-white p-3 border border-gray flex-none rounded-lg overflow-hidden " >
           {/* Event Image */}
           <div className="w-full h-[240px] bg-cover bg-center rounded-lg" style={{ backgroundImage: `url(${endorsmentthumbnail3})` }}>
             
@@ -179,7 +179,7 @@ const Endorsments = () => {
         </Link>
 
         {/*News Card6 */}
-        <Link to="/newsdetail" className="w-full bg-white p-3 border border-gray flex-none rounded-lg overflow-hidden " >
+        <Link to="/endorsmentdetail" className="w-full bg-white p-3 border border-gray flex-none rounded-lg overflow-hidden " >
           {/* Event Image */}
           <div className="w-full h-[240px] bg-cover bg-center rounded-lg" style={{ backgroundImage: `url(${endorsmentthumbnail2})` }}>
             

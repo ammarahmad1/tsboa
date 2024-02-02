@@ -81,7 +81,7 @@ const Navbar = () => {
               </Link>
             </li>
             <li className='p-4 border-b w-full text-center'>
-              <Link to="/vendorrecomendation" onClick={closeMenu}>
+              <Link to="/" onClick={closeMenu}>
                 Business-Directory
               </Link>
             </li>
@@ -141,7 +141,7 @@ const Navbar = () => {
           </Link>
         </li>
         <li className='p-4'>
-          <Link to="/vendorrecomendation" onClick={closeMenu}>
+          <Link to="/businessdirectory" onClick={closeMenu}>
             Business-Directory
           </Link>
         </li>

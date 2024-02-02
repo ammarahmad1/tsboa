@@ -1,10 +1,62 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import busdir from './Images/busdir.jpg'
 import imagebusiness from './Images/imagebusiness.jpg'
 import businessdirlogo from './Images/businessdirlogo.png'
 import businessdirlogo2 from './Images/businessdirlogo2.png'
 import businessdirlogo3 from './Images/businessdirlogo3.png'
-const BusinessDirectoryDetails = () => {
+import { useParams } from 'react-router-dom';
+
+const BusinessDirectoryDetails = ({ match }) => {
+  const [business, setBusiness] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const params = useParams();
+
+
+  useEffect(() => {
+    const fetchBusinessDetails = async () => {
+      try {
+        setLoading(true);
+
+        // Fetch business details using Axios or your preferred method
+        const response = await axios.get(`/api/business/get/${params.businessId}`);
+        const data = response.data;
+
+        if (data.success === false) {
+          setError(true);
+          setLoading(false);
+          return;
+        }
+
+        setBusiness(data); // Assuming business is the key containing your business details
+
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching business details:', error);
+        setError(true);
+        setLoading(false);
+      }
+    };
+
+    // Call the fetchBusinessDetails function
+    fetchBusinessDetails();
+
+    // Scroll to the top when the component mounts
+    window.scrollTo(0, 0);
+  }, [params.businessId]);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error loading business details</p>;
+  }
+
+  if (!business) {
+    return <p>No business found</p>;
+  }
   return (
     <div className='lg:px-0 lg:py-0 sm:px-2'>
          <div className='max-w-[1340px] h-[320px]  overflow-hidden mx-auto relative'>
@@ -13,12 +65,10 @@ const BusinessDirectoryDetails = () => {
             </div>
             <div className=' p-6 text-white text-left  sm:min-h-[274px]'>
                 <h1 className='text-lg text-black lg:w-[1308px] sm:w-[243px] font-semibold font-inter text-left tracking-tighter '>
-                  Health monitor
+                 {business && business.data.businessName}
                 </h1>
-                <p className='text-black'>
-                Turpis quis eget ultrices pharetra felis in diam id. Blandit aliquet cum proin cum orci. Praesent phasellus ipsum ut pharetra lobortis suscipit. Aliquet rhoncus consequat rhoncus parturient gravida massa nunc eu. Mauris eget massa semper neque nulla. At tellus nisi ultricies sit eget tincidunt. Amet accumsan est ut mi amet fusce. Neque nisl tellus velit sagittis et eget nunc fermentum lobortis. Pharetra id aliquet feugiat habitasse. Nunc dui adipiscing lobortis eu elementum id malesuada condimentum sed. Posuere turpis nulla ornare at dictum lacus.
-Non phasellus elit lectus non. Consequat et porttitor elit in tellus velit tellus. Ut rutrum hac at commodo ut at a. Neque sit enim lectus lectus mi. Neque imperdiet enim augue nunc commodo.
-Eleifend consequat tellus scelerisque lobortis amet volutpat. In congue sed aliquam vulputate turpis leo malesuada. A feugiat vivamus sem et amet viverra.  
+                <p className='text-black mt-4'>
+                {business && business.data.description}
                 </p>
               </div>
               <div className='py-6 px-3 bg-[#F2F4F7]'>
@@ -48,7 +98,7 @@ Eleifend consequat tellus scelerisque lobortis amet volutpat. In congue sed aliq
                 Speak to our friendly team.
                 </p>
                 <p className='line-clamp-3 text-left text-sm leading-7 text-black font-semibold'>
-                sales@untitledui.com
+                {business && business.data.email}
                 </p>
                 
 
@@ -72,7 +122,7 @@ Eleifend consequat tellus scelerisque lobortis amet volutpat. In congue sed aliq
                 Visit our office HQ.
                 </p>
                 <p className='line-clamp-3 text-left text-sm leading-7 text-black font-semibold'>
-                100 Smith Street Collingwood VIC 3066 AU
+                {business && business.data.location}
                 </p>
               </div>
             </article>
@@ -92,7 +142,7 @@ Eleifend consequat tellus scelerisque lobortis amet volutpat. In congue sed aliq
                 Mon-Fri from 8am to 5pm.
                 </p>
                 <p className='line-clamp-3 text-left text-sm leading-7 text-black font-semibold'>
-                +1 (555) 000-0000
+                {business && business.data.phoneNumber}
                 </p>    
               </div>
             </article>

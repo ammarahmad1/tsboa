@@ -52,7 +52,7 @@ function App() {
             <Route path="/bidsdetail/:postingId" element={<BidsDetail />} />
             <Route path="/mybids" element={<MyBids />} />
             <Route path="/businessdirectory" element={<BusinessDirectory />} />   
-            <Route path="/businessdirectorydetails" element={<BusinessDirectoryDetails />} />            
+            <Route path="/businessdirectorydetails/:businessId" element={<BusinessDirectoryDetails />} />            
             <Route path="/events" element={<EventsPage />} />
             <Route path="/eventdetail/:eventId" element={<EventDetail />} />
             <Route path="/newspage" element={<NewsPage />} />

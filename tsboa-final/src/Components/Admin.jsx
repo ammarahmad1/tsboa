@@ -24,7 +24,7 @@ const Admin = () => {
     const fetchUserData = async () => {
       
       try {
-        // Fetch user information or get it from your authentication context
+       
         // const user = /* Fetch user information or from context */;
         const user = currentUser; // Assuming currentUser is the user object from Redux
   
@@ -139,6 +139,16 @@ const Admin = () => {
   });
   
 
+  const [businessFormData, setBusinessFormData] = useState({
+    businessName: '',
+    location: '',
+    description: '',
+    email: '',
+    phoneNumber: '',
+    imageUrls: [],
+  });
+  
+
   // Function to handle event form submission
   const handleEventSubmit = async (e) => {
     e.preventDefault();
@@ -168,6 +178,19 @@ const Admin = () => {
     }
   };
 
+  const handleBusinessSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('/api/business/create', businessFormData);
+      console.log('Business created:', response.data);
+      setSuccessMessage('Business created successfully!');
+      // Clear form data or perform any other actions
+    } catch (error) {
+      console.error('Error adding business:', error.response?.data || error.message);
+    }
+  };
+
+
   // Function to update form data for events
   const handleEventChange = (e) => {
     setEventFormData({ ...eventFormData, [e.target.name]: e.target.value });
@@ -177,6 +200,11 @@ const Admin = () => {
   const handleNewsChange = (e) => {
     setNewsFormData({ ...newsFormData, [e.target.name]: e.target.value });
   };
+
+  const handleBusinessChange = (e) => {
+    setBusinessFormData({ ...businessFormData, [e.target.name]: e.target.value });
+  };
+  
 
   return (
     <div className="container mx-auto p-8 bg-gray-100 rounded-md shadow-lg">
@@ -374,6 +402,70 @@ const Admin = () => {
           className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-700"
         >
           Create News
+        </button>
+      </form>
+
+      {/* Business Directory */}
+      <form onSubmit={handleBusinessSubmit} className="p-6 bg-white rounded-md shadow-md">
+        <h3 className="text-xl font-bold mb-4 text-gray-700">Add Business in Business Directory</h3>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm text-gray-600">Business Name</label>
+            <input
+              type="text"
+              name="businessName"
+              value={businessFormData.businessName}
+              onChange={handleBusinessChange}
+              className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-600">Location</label>
+            <input
+              type="text"
+              name="location"
+              value={businessFormData.location}
+              onChange={handleBusinessChange}
+              className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+            />
+          </div>
+        </div>
+        <div className="mt-4">
+          <label className="block text-sm text-gray-600">Description</label>
+          <textarea
+            name="description"
+            value={businessFormData.description}
+            onChange={handleBusinessChange}
+            className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+          />
+        </div>
+        <div className="grid grid-cols-2 gap-4 mt-4">
+          <div>
+            <label className="block text-sm text-gray-600">Email</label>
+            <input
+              type="text"
+              name="email"
+              value={businessFormData.email}
+              onChange={handleBusinessChange}
+              className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-600">Phone Number</label>
+            <input
+              type="text"
+              name="phoneNumber"
+              value={businessFormData.phoneNumber}
+              onChange={handleBusinessChange}
+              className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+            />
+          </div>
+        </div>
+        <button
+          type="submit"
+          className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-700"
+        >
+          Create Business
         </button>
       </form>
     </div>

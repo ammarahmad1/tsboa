@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import businessdir from './Images/businessdir.jpg'
+import newsthumbnail1 from './Images/newsthumbnail1.jpg';
 import axios from 'axios';
+import { CiLocationOn } from "react-icons/ci";
+import { MdOutlineEmail } from "react-icons/md";
+import { IoIosCall } from "react-icons/io";
+import { FaArrowAltCircleRight } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 import { app } from '../firebase';
+import { MdDelete } from 'react-icons/md';
 import {
   getDownloadURL,
   getStorage,
@@ -19,6 +27,66 @@ const Admin = () => {
   const [uploading, setUploading] = useState(false);
   const [files, setFiles] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [businesses, setBusinesses] = useState([]);
+  const [news, setNews] = useState([]);
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const fetchBusinesses = async () => {
+      try {
+        const response = await axios.get('/api/business/get');
+        setBusinesses(response.data);
+      } catch (error) {
+        console.error('Error fetching businesses:', error);
+      }
+    };
+
+    fetchBusinesses();
+  }, []);
+
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const response = await axios.get('/api/news/get');
+        const data = response.data;
+        console.log(data)
+        if (data.success === false) {
+          console.log(data.message);
+         
+          return;
+        }
+        setNews(data || []);
+      
+      } catch (error) {
+        console.error('Error fetching news:', error);
+     
+      }
+    };
+
+    // Call the fetchNews function
+    fetchNews();
+  }, []);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get('/api/events/get');
+        const data = response.data;
+        if (data.success === false) {
+          console.log(data.message);
+          return;
+        }
+
+        setEvents(data || []);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
+    };
+
+    fetchEvents();
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -49,6 +117,56 @@ const Admin = () => {
   
     fetchUserData();
   }, [currentUser]);
+
+  const handleNewsDelete  = async (newsId) => {
+    try {
+      const response = await axios.delete(`/api/news/delete/${newsId}`);
+      const data = response.data;
+    
+      if (data.success === false) {
+        console.log(data.message);
+        return;
+      }
+    
+      setNews((prev) => prev.filter((news) => news._id !== newsId));
+    } 
+    catch (error) {
+      console.log(error.message);
+    }
+  }
+  
+  const handleEventDelete  = async (eventId) => {
+    try {
+      const response = await axios.delete(`/api/events/delete/${eventId}`);
+      const data = response.data;
+    
+      if (data.success === false) {
+        console.log(data.message);
+        return;
+      }
+    
+      setEvents((prev) => prev.filter((event) => event._id !== eventId));
+    } 
+    catch (error) {
+      console.log(error.message);
+    }
+  }
+  const handleBusinessDelete  = async (businessId) => {
+    try {
+      const response = await axios.delete(`/api/business/delete/${businessId}`);
+      const data = response.data;
+    
+      if (data.success === false) {
+        console.log(data.message);
+        return;
+      }
+    
+      setBusinesses((prev) => prev.filter((business) => business._id !== businessId));
+    } 
+    catch (error) {
+      console.log(error.message);
+    }
+  }
 
   const handleImageSubmit = (e) => {
     if (files.length > 0 && files.length + eventFormData.imageUrls.length < 7) {
@@ -340,9 +458,47 @@ const Admin = () => {
           Create Event
         </button>
       </form>
+      <div className="overflow-x-auto">
+      <div className="flex flex-wrap">
+        {events.map((event) => (
+          <div key={event._id} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 mb-4">
+            <Link
+              to={`/eventdetail/${event._id}`}
+              className="block bg-white rounded-lg overflow-hidden shadow-md mr-4"
+            >
+              {/* Event Image */}
+              <div
+                className="w-[388px] h-[275px] bg-cover bg-center rounded-t-lg"
+                style={{ backgroundImage: `url(${event.imageUrls[0]})` }}
+              >
+                {/* Price Tag */}
+                <div className="absolute text-center ml-4 mt-4 w-[74px] h-[41px] justify-center bg-white text-black flex items-center rounded-lg">
+                  <span>{event.offer}</span>
+                </div>
+              </div>
+              {/* Event Details */}
+              <div className="p-4 gap-4 text-left">
+                {/* Event Name */}
+                <h2 className="text-lg font-semibold">{event.eventName}</h2>
+                {/* Event Information */}
+                <p className="text-sm">
+                  Location: {event.location}<br />
+                  Date: {new Date(event.date).toLocaleDateString()}<br />
+                  <span className='font-semibold'> {event.speaker} </span>
+                </p>
+              </div>
+              <button onClick={() => handleEventDelete(event._id)} className="text-red-500">
+                    <MdDelete />
+              </button>
+            </Link>
+            
+          </div>
+        ))}
+      </div>
+      </div>
 
       {/* News creation form */}
-      <form onSubmit={handleNewsSubmit} className="p-6 bg-white rounded-md shadow-md">
+      <form onSubmit={handleNewsSubmit} className="p-6 mb-8 bg-white rounded-md shadow-md">
         <h3 className="text-xl font-bold mb-4 text-gray-700">Create News</h3>
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -404,9 +560,40 @@ const Admin = () => {
           Create News
         </button>
       </form>
+        <div className='flex items-center'>
+        <div className='overflow-x-auto flex-1'>
+          <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 mt-10 mb-4 flex'>
+            {news.map((news) => (
+              <Link to={`/newsdetail/${news._id}`} key={news._id} className='w-full bg-white flex-none rounded-lg overflow-hidden'>
+                {/* Business Image */}
+                <div
+                  className='w-full h-[144px] bg-cover bg-center rounded-t-lg'
+                  style={{ backgroundImage: `url(${newsthumbnail1})` }}
+                ></div>
 
+              <div className="py-4 px-4 gap-4 text-left">
+              {/* News Metadata */}
+              <p className="text-sm">{`${news.author} • ${new Date(news.date).toLocaleDateString()}`}</p>
+
+              {/* News Title */}
+              <h2 className="text-lg font-semibold">{news.newsName}</h2>
+
+              {/* News Description */}
+              <p className="text-sm">{news.description}</p>
+              </div>
+              <button onClick={() => handleNewsDelete(news._id)} className="text-red-500">
+                    <MdDelete />
+              </button>
+              </Link>
+            ))}
+          </div>
+        </div>
+        <div className='ml-4'>
+          <FaArrowAltCircleRight className='text-3xl text-gray-600 cursor-pointer' />
+        </div>
+      </div>
       {/* Business Directory */}
-      <form onSubmit={handleBusinessSubmit} className="p-6 bg-white rounded-md shadow-md">
+      <form onSubmit={handleBusinessSubmit} className="p-6 mb-8 bg-white rounded-md shadow-md">
         <h3 className="text-xl font-bold mb-4 text-gray-700">Add Business in Business Directory</h3>
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -468,6 +655,43 @@ const Admin = () => {
           Create Business
         </button>
       </form>
+      <div className='flex items-center'>
+      <div className='overflow-x-auto flex-1'>
+        <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 mt-10 flex'>
+          {businesses.map((business) => (
+            <Link to={`/businessdirectorydetails/${business._id}`} key={business._id} className='w-full bg-white flex-none rounded-lg overflow-hidden'>
+              {/* Business Image */}
+              <div
+                className='w-full h-[144px] bg-cover bg-center rounded-t-lg'
+                style={{
+                  backgroundImage: `url(${businessdir})`,
+                  width: '388px',
+                  height: '144px',
+                  borderRadius: '8px',
+                }}
+              ></div>
+
+              <div className='p-4 gap-4 text-left'>
+                <h2 className='text-lg font-semibold'>{business.businessName}</h2>
+                <p className='text-lg'>{business.description}</p>
+
+                <p className='text-sm py-2'>
+                  <div className='flex mr-2'><CiLocationOn /> Location: {business.location}</div>
+                  <div className='flex'><MdOutlineEmail /> Email: {business.email}</div>
+                  <div className='flex'><IoIosCall /> Number: {business.phoneNumber}</div>
+                </p>
+                <button onClick={() => handleBusinessDelete(business._id)} className="text-red-500">
+                    <MdDelete />
+                </button>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+      <div className='ml-4'>
+        <FaArrowAltCircleRight className='text-3xl text-gray-600 cursor-pointer' />
+      </div>
+    </div>
     </div>
   );
 };

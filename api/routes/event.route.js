@@ -7,6 +7,6 @@ const router = express.Router();
 
 router.post('/create',  createEvent); // New route for creating events
 router.get('/get', getEvents);
-router.delete('/delete/:id', verifyAdmin, deleteEvent);
+router.delete('/delete/:id', deleteEvent);
 router.get('/get/:id', getEventDetails);
 export default router;

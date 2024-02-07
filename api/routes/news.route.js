@@ -8,7 +8,6 @@ const router = express.Router();
 router.post('/create',  createNews);
 router.get('/get', getNews);
 router.get('/get/:id', getNewsDetail);
-
-router.delete('/delete/:id', verifyAdmin, deleteNews); // New route for deleting news
+router.delete('/delete/:id', deleteNews);
 
 export default router;

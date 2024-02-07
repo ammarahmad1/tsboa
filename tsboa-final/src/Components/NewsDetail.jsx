@@ -97,7 +97,7 @@ const NewsDetail = () => {
         </div>
       </div>
       <h1 className='text-4xl font-semibold font-inter leading-15 tracking-tighter text-left py-2 mt-8'>Introduction</h1>
-      <p className='text-l font-normal font-inter leading-7 text-left py-4'>{news.description} </p>
+     
      
 
   

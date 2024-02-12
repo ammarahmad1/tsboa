@@ -1,4 +1,18 @@
 import mongoose from 'mongoose';
+const bidSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  price: {
+    type: Number,
+    required: true
+  }
+});
 
 const postingSchema = new mongoose.Schema(
     {
@@ -22,6 +36,7 @@ const postingSchema = new mongoose.Schema(
         type: String,
         required: true,
       },
+      bid: [bidSchema]
     },
     { timestamps: true }
   );

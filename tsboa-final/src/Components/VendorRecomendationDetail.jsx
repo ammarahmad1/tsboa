@@ -1,6 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CiLocationOn } from 'react-icons/ci';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 import headervendor from './Images/Headervendor.jpg';
 import servicepic from './Images/servicepic.jpg';
@@ -12,27 +14,77 @@ import vendorthumbnail3 from './Images/vendorthumbnail3.jpg';
 
 const VendorRecomendationDetail = () => {
   const navigate = useNavigate();
+  const params = useParams();
+  const [vendors, setVendors] =useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     // Scroll to the top when the component mounts
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    const fetchVendorsDetails = async () => {
+      try {
+        setLoading(true);
+
+        const response = await axios.get(`/api/vendor/get/${params.vendorsId}`);
+        const data = response.data;
+
+        if (data.success === false) {
+          setError(true);
+          setLoading(false);
+          return;
+        }
+
+        setVendors(data); 
+
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching business details:', error);
+        setError(true);
+        setLoading(false);
+      }
+    };
+    fetchVendorsDetails();
+    window.scrollTo(0, 0);
+  }, [params.vendorsId]);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error loading vendor details</p>;
+  }
+
+  if (!vendors) {
+    return <p>No vendor found</p>;
+  }
+
+
   return (
     <div className='py-4 px-4'>
-      <img src={headervendor} alt="" />
+      {vendors && vendors.data.imageUrls.length > 0 && (
+      <img 
+        src={vendors.data.imageUrls[0]} 
+        alt={`Business Image`} 
+        className='w-full h-[400px] object-cover rounded-3xl' 
+      />
+    )}
+
       <div>
         <div className='flex justify-between items-center py-4'>
-      <h1 className=' text-3xl font-semibold  text-36 leading-44 tracking-tight text-left'>Mandila Furniture</h1>
-      <div className='min-w-[250px] h-6 flex items-center' ><CiLocationOn /> <p>Carlton VIC</p> <span className='ml-2'>
-              <StarRating rating={4.7} />
+      <h1 className=' text-3xl font-semibold  text-36 leading-44 tracking-tight text-left'>{vendors && vendors.data.vendorName} </h1>
+      <div className='min-w-[250px] h-6 flex items-center' ><CiLocationOn /> <p>{vendors && vendors.data.location}</p> <span className='ml-2'>
+             
             </span>
-            <span className='ml-1'>({4.7})</span> </div>
+            </div>
       
       </div>
       <p className='text-left'>
-      Turpis quis eget ultrices pharetra felis in diam id. Blandit aliquet cum proin cum orci. Praesent phasellus ipsum ut pharetra lobortis suscipit. Aliquet rhoncus consequat rhoncus parturient gravida massa nunc eu. Mauris eget massa semper neque nulla. At tellus nisi ultricies sit eget tincidunt. Amet accumsan est ut mi amet fusce. Neque nisl tellus velit sagittis et eget nunc fermentum lobortis. Pharetra id aliquet feugiat habitasse. Nunc dui adipiscing lobortis eu elementum id malesuada condimentum sed. Posuere turpis nulla ornare at dictum lacus.
-<br></br> <br></br> Non phasellus elit lectus non. Consequat et porttitor elit in tellus velit tellus. Ut rutrum hac at commodo ut at a. Neque sit enim lectus lectus mi. Neque imperdiet enim augue nunc commodo.
-<br></br> <br></br> Eleifend consequat tellus scelerisque lobortis amet volutpat. In congue sed aliquam vulputate turpis leo malesuada. A feugiat vivamus sem et amet viverra.
+      {vendors && vendors.data.description}
       </p>
       </div>
       <div>
@@ -40,104 +92,25 @@ const VendorRecomendationDetail = () => {
       </div>
      
      {/* Service Cards */}
-     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-     <div className="max-w-[653px] min-h-[176px] p-2 border border-gray-300 rounded-lg flex gap-2">
-      {/* Image */}
-      <div className="w-[200px] h-[144px] rounded-8"> <img src={vendorthumbnail} alt="" /> </div>
+     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {vendors.data.services.map((service, index) => (
+          <div key={index} className="max-w-[653px] min-h-[176px] p-2 border border-gray-300 rounded-lg flex gap-2">
+            {/* Image */}
+            <div className="w-[200px] h-[144px] rounded-8"> <img src={service.serviceImageUrls[0]} alt="" /> </div>
 
-      {/* Content */}
-      <div className="max-w-[401px] min-h-[138px]  text-left  flex flex-col gap-2">
-        <h2 className="text-md font-semibold">Beds</h2>
-        <p className="text-md font-normal">Custom Queen Size bed designs</p>
-        <div className="flex items-center">
-         <StarRating rating={4.7} />
-          <span className="ml-1">({4.7})</span>
-        </div>
-        <p className="text-md font-normal">$490 AUD total</p>
+            {/* Content */}
+            <div className="max-w-[401px] min-h-[138px] text-left flex flex-col gap-2">
+              <h2 className="text-md font-semibold">{service.name}</h2>
+              <p className="text-md font-normal">{service.description}</p>
+              <div className="flex items-center">
+                {/* Render your star rating component here */}
+                <span className="ml-1">${service.price}</span>
+              </div>
+              {/* Render additional service information as needed */}
+            </div>
+          </div>
+        ))}
       </div>
-    </div>
-
-    <div className="max-w-[653px] min-h-[176px] p-2 border border-gray-300 rounded-lg flex gap-2">
-      {/* Image */}
-      <div className="w-[200px] h-[144px] rounded-8"> <img src={vendorthumbnail2} alt="" /> </div>
-
-      {/* Content */}
-      <div className="max-w-[401px] min-h-[138px]  text-left  flex flex-col gap-2">
-        <h2 className="text-md font-semibold">Beds</h2>
-        <p className="text-md font-normal">Custom Queen Size bed designs</p>
-        <div className="flex items-center">
-         <StarRating rating={4.7} />
-          <span className="ml-1">({4.7})</span>
-        </div>
-        <p className="text-md font-normal">$490 AUD total</p>
-      </div>
-    </div>
-
-    <div className="max-w-[653px] min-h-[176px] p-2 border border-gray-300 rounded-lg flex gap-2">
-      {/* Image */}
-      <div className="w-[200px] h-[144px] rounded-8"> <img src={vendorthumbnail3} alt="" /> </div>
-
-      {/* Content */}
-      <div className="max-w-[401px] min-h-[138px]  text-left  flex flex-col gap-2">
-        <h2 className="text-md font-semibold">Beds</h2>
-        <p className="text-md font-normal">Custom Queen Size bed designs</p>
-        <div className="flex items-center">
-         <StarRating rating={4.7} />
-          <span className="ml-1">({4.7})</span>
-        </div>
-        <p className="text-md font-normal">$490 AUD total</p>
-      </div>
-    </div>
-
-     <div className="max-w-[653px] min-h-[176px] p-2 border border-gray-300 rounded-lg flex gap-2">
-      {/* Image */}
-      <div className="w-[200px] h-[144px] rounded-8"> <img src={vendorthumbnail} alt="" /> </div>
-
-      {/* Content */}
-      <div className="max-w-[401px] min-h-[138px]  text-left  flex flex-col gap-2">
-        <h2 className="text-md font-semibold">Beds</h2>
-        <p className="text-md font-normal">Custom Queen Size bed designs</p>
-        <div className="flex items-center">
-         <StarRating rating={4.7} />
-          <span className="ml-1">({4.7})</span>
-        </div>
-        <p className="text-md font-normal">$490 AUD total</p>
-      </div>
-    </div>
-
-    <div className="max-w-[653px] min-h-[176px] p-2 border border-gray-300 rounded-lg flex gap-2">
-      {/* Image */}
-      <div className="w-[200px] h-[144px] rounded-8"> <img src={vendorthumbnail} alt="" /> </div>
-
-      {/* Content */}
-      <div className="max-w-[401px] min-h-[138px]  text-left  flex flex-col gap-2">
-        <h2 className="text-md font-semibold">Beds</h2>
-        <p className="text-md font-normal">Custom Queen Size bed designs</p>
-        <div className="flex items-center">
-         <StarRating rating={4.7} />
-          <span className="ml-1">({4.7})</span>
-        </div>
-        <p className="text-md font-normal">$490 AUD total</p>
-      </div>
-    </div>
-
-    <div className="max-w-[653px] min-h-[176px] p-2 border border-gray-300 rounded-lg flex gap-2">
-      {/* Image */}
-      <div className="w-[200px] h-[144px] rounded-8"> <img src={vendorthumbnail} alt="" /> </div>
-
-      {/* Content */}
-      <div className="max-w-[401px] min-h-[138px]  text-left  flex flex-col gap-2">
-        <h2 className="text-md font-semibold">Beds</h2>
-        <p className="text-md font-normal">Custom Queen Size bed designs</p>
-        <div className="flex items-center">
-         <StarRating rating={4.7} />
-          <span className="ml-1">({4.7})</span>
-        </div>
-        <p className="text-md font-normal">$490 AUD total</p>
-      </div>
-    </div>
-
-    </div>
     </div>
   )
 }

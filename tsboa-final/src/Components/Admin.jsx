@@ -31,6 +31,7 @@ const Admin = () => {
   const [news, setNews] = useState([]);
   const [events, setEvents] = useState([]);
   const [endorsements, setEndorsements] = useState([]);
+  const [vendors, setVendors] =useState(null);
 
   useEffect(() => {
     const fetchBusinesses = async () => {
@@ -58,6 +59,21 @@ const Admin = () => {
     };
 
     fetchEndorsements();
+  }, []);
+
+  useEffect(() => {
+    const fetchVendors = async () => {
+      try {
+        const response = await axios.get('/api/vendor/get');
+        const data = response.data;
+        setVendors(data);
+        console.log(vendors)
+      } catch (error) {
+        console.error('Error fetching vendors:', error);
+      }
+    };
+
+    fetchVendors();
   }, []);
 
 
@@ -200,6 +216,27 @@ const Admin = () => {
       console.log(error.message);
     }
   }
+
+  const handleVendorsDelete = async (vendorId) => {
+    try {
+      const response = await axios.delete(`/api/vendor/delete/${vendorId}`);
+      const data = response.data;
+    
+      if (data.success === false) {
+        console.log(data.message);
+        return;
+      }
+    
+      setVendors((prev) => prev.filter((vendors) => vendors._id !== vendorId));
+    } 
+    catch (error) {
+      console.log(error.message);
+    }
+  }
+
+
+
+
   const handleLogoSubmit = (e, formDataSetter) => {
     const file = e.target.files[0];
     if (file) {
@@ -314,6 +351,14 @@ const Admin = () => {
     imageUrls: [],
   });
   
+  const [vendorData, setVendorData] = useState({
+    vendorName: '',
+    location: '',
+    description: '',
+    imageUrls: [],
+    logo: [],
+    services: [],
+  });
 
   const [businessFormData, setBusinessFormData] = useState({
     businessName: '',
@@ -345,6 +390,7 @@ const Admin = () => {
 
    });
   
+   
 
   // Function to handle event form submission
   const handleEventSubmit = async (e) => {
@@ -419,6 +465,36 @@ const Admin = () => {
     setEndorsmentFormData({ ...endorsmentFormData, [e.target.name]: e.target.value });
   };
   
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setVendorData({ ...vendorData, [name]: value });
+  };
+
+  const handleServiceChange = (index, e) => {
+    const { name, value } = e.target;
+    const updatedServices = [...vendorData.services];
+    updatedServices[index][name] = value;
+    setVendorData({ ...vendorData, services: updatedServices });
+  };
+
+  const addServiceField = () => {
+    setVendorData({
+      ...vendorData,
+      services: [...vendorData.services, { name: '', description: '', serviceImageUrls: [], price: '' }],
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('/api/vendor/create', vendorData);
+      console.log(response.data);
+      // You can handle success here
+    } catch (error) {
+      console.error('Error creating vendor:', error);
+      // You can handle error here
+    }
+  };
 
   return (
     <div className="container mx-auto p-8 bg-gray-100 rounded-md shadow-lg">
@@ -906,7 +982,87 @@ const Admin = () => {
     </Link>
   ))}      
   </div>           
+      {/* Vendor */}
+      <div className=" mx-auto mt-8">
+      <h2 className="text-2xl font-bold mb-4">Create Vendor</h2>
+      <form onSubmit={handleSubmit} className="p-6 mb-8 bg-white rounded-md shadow-md">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="vendorName" className="block text-sm text-gray-600 font-semibold">Vendor Name</label>
+            <input type="text" id="vendorName" name="vendorName" value={vendorData.vendorName} onChange={handleChange} className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500" required />
+          </div>
+          <div>
+            <label htmlFor="location" className="block text-sm text-gray-600 font-semibold">Location</label>
+            <input type="text" id="location" name="location" value={vendorData.location} onChange={handleChange} className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500" required />
+          </div>
+        </div>
+        <div className="mt-4">
+          <label htmlFor="description" className="block text-sm text-gray-600 font-semibold">Description</label>
+          <textarea id="description" name="description" value={vendorData.description} onChange={handleChange} className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500" required />
+        </div>
+        <p>Upload Picture</p>
+        <input
+          onChange={(e) => handleImageSubmit(e, setVendorData)}
+          className='p-3 border border-gray-300 rounded w-full'
+          type='file'
+          id='images'
+          accept='image/*'
+          multiple
+        />
+        {vendorData.imageUrls.map((url, index) => (
+          <div key={url}>
+            <img src={url} alt='Uploaded' />
+            <button onClick={() => handleRemoveImage(index, setBusinessFormData)}>Remove</button>
+          </div>
+        ))}
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold mb-2">Services</h3>
+          {vendorData.services.map((service, index) => (
+            <div key={index} className="space-y-2">
+              <div>
+                <label htmlFor={`serviceName${index}`} className="block text-sm text-gray-600 font-semibold">Service Name</label>
+                <input type="text" id={`serviceName${index}`} name="name" value={service.name} onChange={(e) => handleServiceChange(index, e)} className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500" required />
+              </div>
+              <div>
+                <label htmlFor={`serviceDescription${index}`} className="block text-sm text-gray-600 font-semibold">Service Description</label>
+                <textarea id={`serviceDescription${index}`} name="description" value={service.description} onChange={(e) => handleServiceChange(index, e)} className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500" required />
+              </div>
+            </div>
+          ))}
+          <button type="button" onClick={addServiceField} className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue">Add Service</button>
+        </div>
 
+        <button type="submit" className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue">Create Vendor</button>
+      </form>
+         <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200  sm:mt-16  lg:mx-0 lg:max-w-none lg:grid-cols-3">
+            {vendors && vendors.map((vendor) => (
+            <article key={vendor._id} className="flex max-w-xl border-gray-300 border rounded-md p-4 flex-col items-start justify-between">
+              <div className="group relative mb-4">
+                <Link to={`./`}>
+                  <div className='flex'>
+                    <h3 className="mt-3 text-lg text-left font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
+                      <a href="#">
+                        <span className="flex inset-0 text-left"></span>
+                        {vendor.vendorName}
+                      </a>
+                    </h3>
+                  </div>
+                  <p className="mt-5 line-clamp-3 text-left text-sm leading-7 text-gray-600" style={{ lineHeight: '1.6' }}>
+                    {vendor.description}
+                  </p>
+                  <button onClick={() => handleVendorsDelete(vendor._id)} className="text-red-500">
+                    <MdDelete />
+                </button>
+
+                </Link>
+              </div>
+            </article>
+          ))}
+
+            </div>
+          </div>
+    </div>
       {/* Business Directory */}
       <form onSubmit={handleBusinessSubmit} className="p-6 mb-8 bg-white rounded-md shadow-md">
         <h3 className="text-xl font-bold mb-4 text-gray-700">Add Business in Business Directory</h3>

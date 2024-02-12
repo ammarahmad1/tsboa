@@ -4,6 +4,7 @@ import bidthumbnail from './Images/bidthumbnail.jpg'
 import { useSelector } from 'react-redux';
 import React from 'react';
 import axios from 'axios';
+import homepagebg from './Images/homepagebg.jpg';
 import Loading from './Loading'; 
 
 const Bids = () => {
@@ -59,10 +60,9 @@ const Bids = () => {
   }, []);
   return (
     <div className='py-2 px-4'>
-    <div className='max-w-[1512px] min-h-[306px] bg-[#F2F4F7] flex items-center justify-center px-0 '>
-      <h1 className='text-4xl font-semibold font-inter text-center leading-10 tracking-tighter'>Hello</h1>
-    </div>
-  
+   <div className='max-w-[1512px] min-h-[306px] flex items-center justify-center px-0 ' style={{backgroundImage: `url(${homepagebg})`, backgroundSize: 'cover'}}>
+          <h1 className='text-4xl font-semibold text-white font-inter text-center leading-10 tracking-tighter'>Bids</h1>
+      </div>
     <div className='flex lg:flex-row sm:flex-col ml-4 space-y-4 sm:space-y-0 sm:space-x-4 sm:w-[138px]'>
   <div className='lg:w-[211px] sm:w-[186px]'>
     <Link to="../">

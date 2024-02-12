@@ -58,7 +58,7 @@ function App() {
             <Route path="/newspage" element={<NewsPage />} />
             <Route path="/newsdetail/:newsId" element={<NewsDetail />} />
             <Route path="/endorsments" element={<Endorsments />} />
-            <Route path="/endorsmentdetail" element={<EndorsmentsDetail />} />
+            <Route path="/endorsmentdetail/:endorsmentId" element={<EndorsmentsDetail />} />
             <Route path="/vendorrecomendation" element={<VendorRecomendation />} />
             <Route path="/vendorrecomendationdetail" element={<VendorRecomendationDetail />} />
             <Route path="/bids" element={<Bids />} />   

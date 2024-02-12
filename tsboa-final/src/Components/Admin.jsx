@@ -30,6 +30,7 @@ const Admin = () => {
   const [businesses, setBusinesses] = useState([]);
   const [news, setNews] = useState([]);
   const [events, setEvents] = useState([]);
+  const [endorsements, setEndorsements] = useState([]);
 
   useEffect(() => {
     const fetchBusinesses = async () => {
@@ -42,6 +43,21 @@ const Admin = () => {
     };
 
     fetchBusinesses();
+  }, []);
+
+  useEffect(() => {
+    const fetchEndorsements = async () => {
+      try {
+        const response = await axios.get('/api/endorsment/get');
+        const data = response.data;
+        setEndorsements(data);
+        console.log(endorsements)
+      } catch (error) {
+        console.error('Error fetching endorsment:', error);
+      }
+    };
+
+    fetchEndorsements();
   }, []);
 
 
@@ -134,6 +150,23 @@ const Admin = () => {
       console.log(error.message);
     }
   }
+
+  const handleEndorsmentDelete  = async (endorsmentId) => {
+    try {
+      const response = await axios.delete(`/api/endorsment/delete/${endorsmentId}`);
+      const data = response.data;
+    
+      if (data.success === false) {
+        console.log(data.message);
+        return;
+      }
+    
+      setNews((prev) => prev.filter((endorsment) => endorsment._id !== endorsmentId));
+    } 
+    catch (error) {
+      console.log(error.message);
+    }
+  }
   
   const handleEventDelete  = async (eventId) => {
     try {
@@ -167,9 +200,34 @@ const Admin = () => {
       console.log(error.message);
     }
   }
-
-  const handleImageSubmit = (e) => {
-    if (files.length > 0 && files.length + eventFormData.imageUrls.length < 7) {
+  const handleLogoSubmit = (e, formDataSetter) => {
+    const file = e.target.files[0];
+    if (file) {
+      setUploading(true);
+      setImageUploadError(false);
+      
+      storeImage(file)
+        .then((url) => {
+          formDataSetter((prevFormData) => ({
+            ...prevFormData,
+            logo: url, 
+          }));
+          setImageUploadError(false);
+          setUploading(false);
+        })
+        .catch((err) => {
+          setImageUploadError('Logo upload failed (2 MB max)');
+          setUploading(false);
+        });
+    } else {
+      setImageUploadError('You can only upload images');
+      setUploading(false);
+    }
+  };
+  
+  const handleImageSubmit = (e, formDataSetter) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
       setUploading(true);
       setImageUploadError(false);
       const promises = [];
@@ -179,10 +237,10 @@ const Admin = () => {
       }
       Promise.all(promises)
         .then((urls) => {
-          setEventFormData({
-            ...eventFormData,
-            imageUrls: eventFormData.imageUrls.concat(urls),
-          });
+          formDataSetter((prevFormData) => ({
+            ...prevFormData,
+            imageUrls: prevFormData.imageUrls.concat(urls),
+          }));
           setImageUploadError(false);
           setUploading(false);
         })
@@ -191,7 +249,7 @@ const Admin = () => {
           setUploading(false);
         });
     } else {
-      setImageUploadError('You can only upload 6 images per Posting');
+      setImageUploadError('You can only upload images');
       setUploading(false);
     }
   };
@@ -228,7 +286,6 @@ const Admin = () => {
     });
   };
 
-
   const handleRemoveImage = (index) => {
     setEventFormData({
       ...eventFormData,
@@ -254,6 +311,7 @@ const Admin = () => {
     description: '',
     author: '',
     date: '',
+    imageUrls: [],
   });
   
 
@@ -265,6 +323,27 @@ const Admin = () => {
     phoneNumber: '',
     imageUrls: [],
   });
+
+  const [endorsmentFormData, setEndorsmentFormData] = useState({
+
+   "endorsmentName":"",
+   "location":"",
+   "feedback":"",
+   "description":"",
+   "designation":"",
+   "endorsmentFor":"",
+   "twitter":"",
+   "linkedin":"",
+   "insta":"",
+   "website":"",
+   "speaker":"",
+   "phone":"",
+   "date":"",
+   "offer":"",
+   "logo":[],
+   "imageUrls":[]
+
+   });
   
 
   // Function to handle event form submission
@@ -274,9 +353,9 @@ const Admin = () => {
       // Make API call to create event
       const response = await axios.post('/api/events/create', eventFormData);
       console.log('Event created:', response.data);
-      // Clear form data or perform any other actions
+      // Clear form data
       setSuccessMessage('Event created successfully!');
-      // Clear form data or perform any other actions
+      // Clear form data
     } catch (error) {
       console.error('Error creating event:', error.response?.data || error.message);
     }
@@ -290,7 +369,7 @@ const Admin = () => {
       const response = await axios.post('/api/news/create', newsFormData);
       console.log('News created:', response.data);
       setSuccessMessage('News created successfully!');
-      // Clear form data or perform any other actions
+      // Clear form data
     } catch (error) {
       console.error('Error creating news:', error.response?.data || error.message);
     }
@@ -302,9 +381,22 @@ const Admin = () => {
       const response = await axios.post('/api/business/create', businessFormData);
       console.log('Business created:', response.data);
       setSuccessMessage('Business created successfully!');
-      // Clear form data or perform any other actions
+      // Clear form data 
     } catch (error) {
       console.error('Error adding business:', error.response?.data || error.message);
+    }
+  };
+
+
+  const handleEndorsmentSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('/api/endorsment/create', endorsmentFormData);
+      console.log('Endorsment created:', response.data);
+      setSuccessMessage('Endorsment created successfully!');
+      // Clear form data
+    } catch (error) {
+      console.error('Error adding Endorsment:', error.response?.data || error.message);
     }
   };
 
@@ -321,6 +413,10 @@ const Admin = () => {
 
   const handleBusinessChange = (e) => {
     setBusinessFormData({ ...businessFormData, [e.target.name]: e.target.value });
+  };
+
+  const handleEndorsmentChange = (e) => {
+    setEndorsmentFormData({ ...endorsmentFormData, [e.target.name]: e.target.value });
   };
   
 
@@ -463,7 +559,7 @@ const Admin = () => {
         {events.map((event) => (
           <div key={event._id} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 mb-4">
             <Link
-              to={`/eventdetail/${event._id}`}
+              to={`../admin`}
               className="block bg-white rounded-lg overflow-hidden shadow-md mr-4"
             >
               {/* Event Image */}
@@ -552,6 +648,20 @@ const Admin = () => {
               className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
             />
           </div>
+          <input
+          onChange={(e) => handleImageSubmit(e, setNewsFormData)}
+          className='p-3 border border-gray-300 rounded w-full'
+          type='file'
+          id='images'
+          accept='image/*'
+          multiple
+        />
+        {newsFormData.imageUrls.map((url, index) => (
+          <div key={url}>
+            <img src={url} alt='Uploaded' />
+            <button onClick={() => handleRemoveImage(index, setNewsFormData)}>Remove</button>
+          </div>
+        ))}
         </div>
         <button
           type="submit"
@@ -564,7 +674,7 @@ const Admin = () => {
         <div className='overflow-x-auto flex-1'>
           <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 mt-10 mb-4 flex'>
             {news.map((news) => (
-              <Link to={`/newsdetail/${news._id}`} key={news._id} className='w-full bg-white flex-none rounded-lg overflow-hidden'>
+              <Link to={`../admin`} key={news._id} className='w-full bg-white flex-none rounded-lg overflow-hidden'>
                 {/* Business Image */}
                 <div
                   className='w-full h-[144px] bg-cover bg-center rounded-t-lg'
@@ -592,6 +702,211 @@ const Admin = () => {
           <FaArrowAltCircleRight className='text-3xl text-gray-600 cursor-pointer' />
         </div>
       </div>
+
+      {/* Endorsment */}
+      <form onSubmit={handleEndorsmentSubmit} className="p-6 mb-8 bg-white rounded-md shadow-md">
+      <h3 className="text-xl font-bold mb-4 text-gray-700">Add Endorsment</h3>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm text-gray-600">Endorsment Name</label>
+          <input
+            type="text"
+            name="endorsmentName"
+            value={endorsmentFormData.endorsmentName}
+            onChange={handleEndorsmentChange}
+            className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+          />
+        </div>
+        <div>
+          <label className="block text-sm text-gray-600">Location</label>
+          <input
+            type="text"
+            name="location"
+            value={endorsmentFormData.location}
+            onChange={handleEndorsmentChange}
+            className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+          />
+        </div>
+      </div>
+      <div className="mt-4">
+        <label className="block text-sm text-gray-600">Feedback</label>
+        <textarea
+          name="feedback"
+          value={endorsmentFormData.feedback}
+          onChange={handleEndorsmentChange}
+          className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+        />
+      </div>
+      <div className="mt-4">
+        <label className="block text-sm text-gray-600">Description</label>
+        <textarea
+          name="description"
+          value={endorsmentFormData.description}
+          onChange={handleEndorsmentChange}
+          className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-4 mt-4">
+        <div>
+          <label className="block text-sm text-gray-600">Designation</label>
+          <input
+            type="text"
+            name="designation"
+            value={endorsmentFormData.designation}
+            onChange={handleEndorsmentChange}
+            className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+          />
+        </div>
+        <div>
+          <label className="block text-sm text-gray-600">Endorsment For</label>
+          <input
+            type="text"
+            name="endorsmentFor"
+            value={endorsmentFormData.endorsmentFor}
+            onChange={handleEndorsmentChange}
+            className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-4 mt-4">
+      <div>
+        <label className="block text-sm text-gray-600">Twitter</label>
+        <input
+          type="text"
+          name="twitter"
+          value={endorsmentFormData.twitter}
+          onChange={handleEndorsmentChange}
+          className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+        />
+      </div>
+      <div>
+        <label className="block text-sm text-gray-600">LinkedIn</label>
+        <input
+          type="text"
+          name="linkedin"
+          value={endorsmentFormData.linkedin}
+          onChange={handleEndorsmentChange}
+          className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+        />
+      </div>
+    </div>
+    <div className="grid grid-cols-2 gap-4 mt-4">
+      <div>
+        <label className="block text-sm text-gray-600">Instagram</label>
+        <input
+          type="text"
+          name="insta"
+          value={endorsmentFormData.insta}
+          onChange={handleEndorsmentChange}
+          className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+        />
+      </div>
+      <div>
+        <label className="block text-sm text-gray-600">Website</label>
+        <input
+          type="text"
+          name="website"
+          value={endorsmentFormData.website}
+          onChange={handleEndorsmentChange}
+          className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+        />
+      </div>
+    </div>
+    <div className="grid grid-cols-2 gap-4 mt-4">
+      <div>
+        <label className="block text-sm text-gray-600">Phone</label>
+        <input
+          type="text"
+          name="phone"
+          value={endorsmentFormData.phone}
+          onChange={handleEndorsmentChange}
+          className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+        />
+      </div>
+    </div>
+    <div className="grid grid-cols-2 gap-4 mt-4">
+      <div>
+        <label className="block text-sm text-gray-600">Date</label>
+        <input
+          type="date"
+          name="date"
+          value={endorsmentFormData.date}
+          onChange={handleEndorsmentChange}
+          className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+        />
+      </div>
+    </div>
+
+    <div className="mt-4">
+        <label className="block text-sm text-gray-600">Logo</label>
+        <input
+          onChange={(e) => handleLogoSubmit(e, setEndorsmentFormData)}
+          className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+          type="file"
+          id="logo"
+          accept="image/*"
+          multiple={false}
+        />
+        {endorsmentFormData.logo && (
+          <div>
+            <img src={endorsmentFormData.logo} alt="Logo Preview" />
+          </div>
+        )}
+      </div>
+
+      <p>Upload images</p>
+      <input
+        onChange={(e) => handleImageSubmit(e, setEndorsmentFormData)}
+        className="p-3 border border-gray-300 rounded w-full"
+        type="file"
+        id="images"
+        accept="image/*"
+        multiple
+      />
+      {endorsmentFormData.imageUrls.map((url, index) => (
+        <div key={url}>
+          <img src={url} className='h-[100px] w-[100px]' alt="Uploaded" />
+          <button onClick={() => handleRemoveImage(index, setEndorsmentFormData)}>Remove</button>
+        </div>
+      ))}
+      <button
+        type="submit"
+        className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-700"
+      >
+        Create Endorsment
+      </button>
+    </form>
+    <div className='flex flex-wrap w-[450px]'>
+    {endorsements.map((endorsement, index) => (
+    <Link to={`/endorsmentdetail/${endorsement._id}`} key={index} className="w-[400px] mb-2 bg-white p-3 border border-gray flex-none rounded-lg overflow-hidden">
+    
+      <div className="w-[400px] h-[240px] bg-cover bg-center rounded-lg" style={{ backgroundImage: `url(${endorsement.imageUrls})` }}>
+      </div>
+     
+      <div className="py-2 gap-4 text-left">
+        {/* Endorsement Name */}
+        <h2 className="text-lg font-semibold">{endorsement.endorsmentName}</h2>
+        <p className="text-sm py-1">
+          {endorsement.designation}
+        </p>
+        {/* Endorsement Feedback */}
+        <p className="text-sm font-semibold py-1">
+          "{endorsement.feedback}"
+        </p>
+        {/* Endorsement for */}
+        <h3 className="text-lg font-semibold">Endorsement for:</h3>
+        <div className='flex items-center'>
+          <img src={endorsement.logo} className='w-[48px] h-[48px]' alt="" />
+          <p className='font-inter text-md font-semibold leading-6 text-left ml-2'>{endorsement.endorsmentFor}</p>
+        </div>
+      </div>
+      <button onClick={() => handleEndorsmentDelete(endorsement._id)} className="text-red-500">
+                    <MdDelete />
+              </button>
+    </Link>
+  ))}      
+  </div>           
+
       {/* Business Directory */}
       <form onSubmit={handleBusinessSubmit} className="p-6 mb-8 bg-white rounded-md shadow-md">
         <h3 className="text-xl font-bold mb-4 text-gray-700">Add Business in Business Directory</h3>
@@ -648,6 +963,21 @@ const Admin = () => {
             />
           </div>
         </div>
+        <p>Upload two pictures</p>
+        <input
+          onChange={(e) => handleImageSubmit(e, setBusinessFormData)}
+          className='p-3 border border-gray-300 rounded w-full'
+          type='file'
+          id='images'
+          accept='image/*'
+          multiple
+        />
+        {businessFormData.imageUrls.map((url, index) => (
+          <div key={url}>
+            <img src={url} alt='Uploaded' />
+            <button onClick={() => handleRemoveImage(index, setBusinessFormData)}>Remove</button>
+          </div>
+        ))}
         <button
           type="submit"
           className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-700"
@@ -659,7 +989,7 @@ const Admin = () => {
       <div className='overflow-x-auto flex-1'>
         <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 mt-10 flex'>
           {businesses.map((business) => (
-            <Link to={`/businessdirectorydetails/${business._id}`} key={business._id} className='w-full bg-white flex-none rounded-lg overflow-hidden'>
+            <Link to={`../admin`} key={business._id} className='w-full bg-white flex-none rounded-lg overflow-hidden'>
               {/* Business Image */}
               <div
                 className='w-full h-[144px] bg-cover bg-center rounded-t-lg'

@@ -67,11 +67,10 @@ const NewsDetail = () => {
       <h1 className='text-5xl font-semibold font-inter leading-15 tracking-tighter text-left'>{news.newsName}</h1>
 
       {/* Image */}
-      <img
-        src={newsdetailmainimg}
-        alt="News Detail Image"
-        className="w-full h-[640px] object-cover mt-8 rounded-md"
-      />
+      {news && news.imageUrls.length > 0 && (
+            <img src={news.imageUrls[0]} alt={`Second Business Image`} className='w-full h-[800px] mt-4 object-cover rounded-3xl' />
+          )}
+     
 
       {/* Author and Published Info */}
       <div className="flex justify-between items-center mt-4 ">

@@ -65,7 +65,7 @@ const Bids = () => {
   
     <div className='flex lg:flex-row sm:flex-col ml-4 space-y-4 sm:space-y-0 sm:space-x-4 sm:w-[138px]'>
   <div className='lg:w-[211px] sm:w-[186px]'>
-    <Link to="../vendorrecomendation">
+    <Link to="../">
       <div className='h-[40px] mt-4 bg-[#D0D5DD] rounded-lg flex items-center p-4 sm:w-min'>
         <p className='border-gray-200 text-left text-sm font-semibold leading-5 tracking-normal whitespace-nowrap'>
           Vendor Recommendation

@@ -29,7 +29,7 @@ const EventDetail = () => {
       try {
         setLoading(true);
 
-        // Use Axios to fetch event details
+        
         const response = await axios.get(`/api/events/get/${params.eventId}`);
         console.log(response)
         const data = response.data;
@@ -41,7 +41,7 @@ const EventDetail = () => {
           return;
         }
 
-        setEvent(data); // Assuming event is the key containing your event details
+        setEvent(data); 
 
         setLoading(false);
       } catch (error) {

@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { CiLocationOn } from "react-icons/ci";
 import { MdOutlineEmail } from "react-icons/md";
 import { IoIosCall } from "react-icons/io";
-import businessdir from './Images/businessdir.jpg'
 import axios from 'axios'; 
 
 const BusinessDirectory = () => {
@@ -21,6 +20,7 @@ const BusinessDirectory = () => {
 
     fetchBusinesses();
   }, []);
+
   return (
     <div className='py-2'>
       <div className='max-w-[1512px] min-h-[306px] bg-[#F2F4F7] flex items-center justify-center px-0  '>
@@ -48,35 +48,37 @@ const BusinessDirectory = () => {
         </div>
 
         <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 mt-10'>
-        {businesses.map((business) => (
-          <Link to={`/businessdirectorydetails/${business._id}`} key={business._id} className='w-full bg-white flex-none rounded-lg overflow-hidden'>
-            {/* Business Image */}
-            <div
-              className='w-full h-[144px] bg-cover bg-center rounded-t-lg'
-              style={{
-                backgroundImage: `url(${businessdir})`,
-                width: '388px',
-                height: '144px',
-                borderRadius: '8px',
-              }}
-            ></div>
+          {businesses.map((business) => (
+            <Link to={`/businessdirectorydetails/${business._id}`} key={business._id} className='w-full bg-white flex-none rounded-lg overflow-hidden'>
+              {/* Business Images */}
+              <div
+                className='w-full h-[144px] bg-cover bg-center rounded-t-lg'
+                style={{
+                  backgroundImage: `url(${business.imageUrls[0]})`, // Replaced with first image URL
+                  width: '388px',
+                  height: '144px',
+                  borderRadius: '8px',
+                }}
+              ></div>
 
-            <div className='p-4 gap-4 text-left'>
-              <h2 className='text-lg font-semibold'>{business.businessName}</h2>
-              <p className='text-lg'>{business.description}</p>
+              <div className='p-4 gap-4 text-left'>
+                <h2 className='text-lg font-semibold'>{business.businessName}</h2>
+                <p className='text-lg'>{business.description}</p>
 
-              <p className='text-sm py-2'>
-                <div className='flex'><CiLocationOn /> Location: {business.location}</div>
-                <div className='flex'><MdOutlineEmail /> Email: {business.email}</div>
-                <div className='flex'><IoIosCall /> Number: {business.number}</div>
-              </p>
-            </div>
-          </Link>
-        ))}
-      </div>
+                <p className='text-sm py-2'>
+                  <div className='flex'><CiLocationOn /> Location: {business.location}</div>
+                  <div className='flex'><MdOutlineEmail /> Email: {business.email}</div>
+                  <div className='flex'><IoIosCall /> Number: {business.phoneNumber}</div>
+                </p>
+              </div>
+
+            
+            </Link>
+          ))}
         </div>
+      </div>
     </div>
   )
 }
 
-export default BusinessDirectory
+export default BusinessDirectory;

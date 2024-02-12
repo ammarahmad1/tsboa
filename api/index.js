@@ -7,6 +7,7 @@ import authRouter from './routes/auth.route.js';
 import postingRouter from './routes/posting.route.js';
 import adminRouter from './routes/admin.route.js'; 
 import businessRouter from './routes/business.route.js'; 
+import endorsmentRouter from './routes/endorsment.route.js'; 
 import newsRouter from './routes/news.route.js'; 
 import cookieParser from 'cookie-parser';
 import path from 'path';
@@ -52,6 +53,7 @@ app.use('/api/posting', postingRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/business', businessRouter);
 app.use('/api/news', newsRouter);
+app.use('/api/endorsment', endorsmentRouter);
 app.use('/api/events', eventRouter);
 app.use(express.static(path.join(__dirname, '../tsboa-final/build')));
 

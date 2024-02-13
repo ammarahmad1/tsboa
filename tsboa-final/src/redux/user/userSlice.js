@@ -54,6 +54,7 @@ const initialState = {
         state.error = action.payload;
         state.loading = false;
       },
+      
     },  
   });
   
@@ -71,5 +72,5 @@ const initialState = {
     signOutUserSuccess,
     signOutUserFailure,
   } = userSlice.actions;
-  
   export default userSlice.reducer;
+  

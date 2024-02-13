@@ -13,9 +13,10 @@ import newsRouter from './routes/news.route.js';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import eventRouter from './routes/event.route.js';
+import homepageRouter from './routes/homepage.route.js';
+import stripePackage from 'stripe';
 
 dotenv.config();
-
 mongoose
   .connect(process.env.MONGO)
   .then(() => {
@@ -28,6 +29,7 @@ mongoose
   const __dirname = path.resolve();
 
 const app = express();
+const stripe = stripePackage(process.env.STRIPE_SECRET_KEY);
 
 app.use(express.json());
 
@@ -38,6 +40,27 @@ app.use(cors());
 
 app.listen(5000, () => {
   console.log('Server is running on port 5000!!');
+});
+
+app.post('/api/buymembership', async (req, res) => {
+  const { token } = req.body;
+
+  try {
+    const charge = await stripe.charges.create({
+      amount: 1000, // Amount in cents
+      currency: 'usd',
+      description: 'Membership Payment',
+      source: token.id,
+    });
+
+    // Handle successful payment
+    // For example, update user status to indicate membership
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error processing payment:', error);
+    res.status(500).json({ error: 'Payment failed' });
+  }
 });
 
 
@@ -57,6 +80,7 @@ app.use('/api/news', newsRouter);
 app.use('/api/endorsment', endorsmentRouter);
 app.use('/api/vendor', vendorRouter);
 app.use('/api/events', eventRouter);
+app.use('/api/homepage', homepageRouter);
 app.use(express.static(path.join(__dirname, '../tsboa-final/build')));
 
 app.get('*', (req, res) => {
@@ -72,3 +96,4 @@ app.use((err, req, res, next) => {
     message,
   });
 });
+

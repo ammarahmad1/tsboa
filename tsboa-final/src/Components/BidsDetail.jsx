@@ -55,17 +55,11 @@ const BidsDetail = () => {
   }, [params.postingId]);
 
   const handleSubBidChange = (e) => {
-    setSubBid({
-      ...subBid,
-      [e.target.name]: e.target.value,
-    });
+    setSubBid({ ...subBid, [e.target.name]: e.target.value });
   };
 
   const handleWholeBidChange = (e) => {
-    setWholeBid({
-      ...wholeBid,
-      [e.target.name]: e.target.value,
-    });
+    setWholeBid({ ...wholeBid, [e.target.name]: e.target.value });
   };
 
   const submitSubBid = async (e) => {
@@ -110,8 +104,6 @@ const BidsDetail = () => {
     }
   };
 
-  
-
   return (
     <div className='py-4 px-4'>
       {posting && posting.imageUrls && (
@@ -153,12 +145,14 @@ const BidsDetail = () => {
                 <label htmlFor='subBidName' className='block font-semibold'>
                   Name:
                 </label>
-                <input
-                  type='text'
-                  id='subBidName'
-                  name='subBidName'
-                  className='w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500'
-                />
+                  <input
+                    type='text'
+                    id='subBidName'
+                    name='name' 
+                    className='w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500'
+                    value={subBid.name}
+                    onChange={handleSubBidChange}
+                  />
               </div>
               <div className='mb-4'>
               <label htmlFor='subBidPrice' className='block font-semibold'>
@@ -167,21 +161,24 @@ const BidsDetail = () => {
               <input
                 type='text'
                 id='subBidPrice'
-                name='price' // Change name attribute to 'price'
+                name='price' 
                 className='w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500'
                 value={subBid.price}
-                onChange={handleSubBidChange} // Add onChange handler
+                onChange={handleSubBidChange}
               />
             </div>
               <div className='mb-4'>
                 <label htmlFor='subBidDescription' className='block font-semibold'>
                   Description:
                 </label>
-                <textarea
+                <input
+                  type='text'
                   id='subBidDescription'
-                  name='subBidDescription'
-                  className='w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500'
-                ></textarea>
+                  name='description' 
+                  className='w-full  border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500'
+                  value={subBid.description}
+                  onChange={handleSubBidChange} 
+                />
               </div>
               <button
                 type='submit'
@@ -198,13 +195,14 @@ const BidsDetail = () => {
                 <label htmlFor='wholeBidName' className='block font-semibold'>
                   Name:
                 </label>
-                <input
-                  type='text'
-                  id='wholeBidName'
-                  name='wholeBidName'
-                  className='w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500'
-                  onChange={handleWholeBidChange}
-                />
+                  <input
+                    type='text'
+                    id='wholeBidName'
+                    name='name' 
+                    className='w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500'
+                    value={wholeBid.name}
+                    onChange={handleWholeBidChange}
+                  />
               </div>
               <div className='mb-4'>
               <label htmlFor='wholeBidPrice' className='block font-semibold'>
@@ -223,11 +221,14 @@ const BidsDetail = () => {
                 <label htmlFor='wholeBidDescription' className='block font-semibold'>
                   Description:
                 </label>
-                <textarea
+                  <input
+                  type='text'
                   id='wholeBidDescription'
-                  name='wholeBidDescription'
-                  className='w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500'
-                ></textarea>
+                  name='description' // Change name attribute to 'price'
+                  className='w-full  border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500'
+                  value={wholeBid.description}
+                  onChange={handleWholeBidChange} // Add onChange handler
+                />
                 </div>
               <button
                 type='submit'
@@ -239,8 +240,26 @@ const BidsDetail = () => {
           </div>
         </div>
       </div>
+      <h2 className='text-lg font-semibold mb-2'>Bids</h2>
+    <div className="bg-gray-100 p-4 text-left rounded-lg">
+      {/* Check if posting is available and it has bids */}
+      {posting && posting.bid && posting.bid.length > 0 ? (
+        // If yes, map over the bids and render their details
+        posting.bid.map((bid, index) => (
+          <div key={bid._id} className="mb-4">
+            <h3 className="font-semibold mb-1">Bid {index + 1}</h3>
+            <p><strong>Name:</strong> {bid.name}</p>
+            <p><strong>Description:</strong> {bid.description}</p>
+            <p><strong>Price:</strong> {bid.price}</p>
+          </div>
+        ))
+      ) : (
+        // If there are no bids available, display a message
+        <p>No bids available. Fill the form above to place bid.</p>
+      )}
     </div>
-  );
+  </div>
+);
 };
 
 export default BidsDetail;

@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import Hero from './Components/Hero';
 import Features_Section from './Components/Features_Section';
 import Events from './Components/Events';
-import Articles from './Components/Articles';
 import Pricing from './Components/Pricing';
 
 
@@ -18,10 +17,10 @@ const HomePage = () => {
   return (
     <div>
       
-      <Hero />
+  
       <Features_Section />
       <Events />
-      <Articles />
+
       <Pricing />
 
     </div>

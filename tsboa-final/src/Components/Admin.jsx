@@ -972,40 +972,32 @@ const Admin = () => {
         Create Endorsment
       </button>
     </form>
-    <div className=" mr-4 max-w-7xl px-6 lg:px-8">
-    <div className=" mt-10 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200  sm:mt-16  lg:mx-0 lg:max-w-none lg:grid-cols-3">
-   
+    <div className="mr-4 max-w-7xl px-6 lg:px-8">
+  <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 border-t border-gray-200">
     {endorsements.map((endorsement, index) => (
-    <Link to={`/}`} key={index} className="w-[400px] mb-2 mr-5 bg-white p-3 border border-gray flex-none rounded-lg overflow-hidden">
-    
-      <div className="w-[400px] h-[240px] bg-cover bg-center rounded-lg" style={{ backgroundImage: `url(${endorsement.imageUrls})` }}>
-      </div>
-     
-      <div className="py-2 gap-4 text-left">
-        {/* Endorsement Name */}
-        <h2 className="text-lg font-semibold">{endorsement.endorsmentName}</h2>
-        <p className="text-sm py-1">
-          {endorsement.designation}
-        </p>
-        {/* Endorsement Feedback */}
-        <p className="text-sm font-semibold py-1">
-          "{endorsement.feedback}"
-        </p>
-        {/* Endorsement for */}
-        <h3 className="text-lg font-semibold">Endorsement for:</h3>
-        <div className='flex items-center'>
-          <img src={endorsement.logo} className='w-[48px] h-[48px]' alt="" />
-          <p className='font-inter text-md font-semibold leading-6 text-left ml-2'>{endorsement.endorsmentFor}</p>
+      <div key={index} className="bg-white p-3 border border-gray-300 rounded-lg overflow-hidden">
+        <div className="h-40 bg-cover bg-center rounded-lg" style={{ backgroundImage: `url(${endorsement.imageUrls})` }}></div>
+        <div className="py-4 text-left">
+          {/* Endorsement Name */}
+          <h2 className="text-lg font-semibold">{endorsement.endorsmentName}</h2>
+          <p className="text-sm py-1">{endorsement.designation}</p>
+          {/* Endorsement Feedback */}
+          <p className="text-sm font-semibold py-1">"{endorsement.feedback}"</p>
+          {/* Endorsement for */}
+          <h3 className="text-lg font-semibold">Endorsement for:</h3>
+          <div className='flex items-center'>
+            <img src={endorsement.logo} className='w-12 h-12' alt="" />
+            <p className='font-inter text-md font-semibold leading-6 text-left ml-2'>{endorsement.endorsmentFor}</p>
+          </div>
         </div>
+        <button onClick={() => handleEndorsmentDelete(endorsement._id)} className="text-red-500">
+          <MdDelete />
+        </button>
       </div>
-      <button onClick={() => handleEndorsmentDelete(endorsement._id)} className="text-red-500">
-                    <MdDelete />
-              </button>
-    </Link>
-  ))}      
+    ))}
   </div>
-
-  </div>           
+</div>
+       
       {/* Vendor */}
       <div className=" mx-auto mt-8">
       <h2 className="text-2xl font-bold mb-4">Create Vendor</h2>
@@ -1025,7 +1017,6 @@ const Admin = () => {
           <textarea id="description" name="description" value={vendorData.description} onChange={handleChange} className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500" required />
         </div>
         <p>Upload Picture</p>
-        <p>Upload images</p>
           <input
             onChange={(e) => handleImageSubmit(e, setVendorData)}
             className="p-3 border border-gray-300 rounded w-full"

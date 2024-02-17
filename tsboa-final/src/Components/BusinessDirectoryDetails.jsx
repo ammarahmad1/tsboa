@@ -59,11 +59,12 @@ const BusinessDirectoryDetails = () => {
 
   return (
     <div className='lg:px-0 lg:py-0 sm:px-2'>
-      <div className='max-w-[1340px] h-[320px] overflow-hidden mx-auto relative'>
+      <div className='max-w-[1340px] h-[400px] overflow-hidden mx-auto relative'>
         {/* Background Image */}
         {business && business.data.imageUrls.map((imageUrl, index) => (
-          <img key={index} src={imageUrl} alt={`Business Image ${index}`} className='w-full h-[800px] object-cover rounded-3xl' />
+          <img key={index} src={imageUrl} alt={`Business Image ${index}`} className='w-full h-[350px] object-cover object-center rounded-2xl' />
         ))}
+
       </div>
       <div className=' p-6 text-white text-left sm:min-h-[274px]'>
         <h1 className='text-lg text-black lg:w-[1308px] sm:w-[243px] font-semibold font-inter text-left tracking-tighter '>

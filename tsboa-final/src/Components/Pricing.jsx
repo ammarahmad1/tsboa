@@ -3,8 +3,14 @@ import pricingicon from './Images/pricingicon.png'
 import pricingicon1 from './Images/pricingicon1.png'
 import pricingicon2 from './Images/pricingicon2.png'
 import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 
 const Pricing = () => {
+  const navigate = useNavigate();
+  const handleLearnMoreClick = () => {
+    // Navigate to the /membership route
+    navigate('/membership');
+  };
   return (
     <div>
       <div class="bg-[#F9FAFB]  sm:py-32">
@@ -97,18 +103,18 @@ const Pricing = () => {
     </div>
   </div>
 </div>
-<div className=" min-h-[124px] py-6 md:py-10 items-center ">
-            <div className=" min-h-[124px] gap-5 flex flex-col items-center md:py-6 bg-[#ffffff]">
-              <h2 className="text-3xl font-semibold">Start your free trial</h2>
-              <p className="text-xl min-h-0 font-normal text-center">
-              Join the community and stay informed about your neighbourhood.
-              </p>
-              <div className='flex gap-4 bg-[#F9FAFB]'>
-              <button className='p-2 min-w-83 h-10 border border-[#0E214B] bg-white font-semibold rounded-md'>Learn More</button>
-             <button className='p-2 min-w-101 h-10 border border-[#0E214B] bg-[#0E214B] text-white font-semibold rounded-md'>Get Started</button>
-             </div>
-            </div>
-          </div>
+    <div className="min-h-[124px] py-6 md:py-10 items-center">
+      <div className="min-h-[124px] gap-5 flex flex-col items-center md:py-6 bg-[#ffffff]">
+        <h2 className="text-3xl font-semibold">Start your free trial</h2>
+        <p className="text-xl min-h-0 font-normal text-center">
+          Join the community and stay informed about your neighbourhood.
+        </p>
+        <div className='flex gap-4 bg-[#F9FAFB]'>
+          <button onClick={handleLearnMoreClick} className='p-2 min-w-83 h-10 border border-[#0E214B] bg-white font-semibold rounded-md'>Learn More</button>
+          <button onClick={handleLearnMoreClick}  className='p-2 min-w-101 h-10 border border-[#0E214B] bg-[#0E214B] text-white font-semibold rounded-md'>Get Started</button>
+        </div>
+      </div>
+    </div>
     </div>
   )
 }

@@ -14,6 +14,10 @@ const eventSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  ticketwebsite: {
+    type: String,
+    required: true,
+  },
   speaker: {
     type: String,
     required: true,

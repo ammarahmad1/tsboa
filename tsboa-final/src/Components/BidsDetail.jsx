@@ -17,12 +17,17 @@ const BidsDetail = () => {
     name: '',
     price: '',
     description: '',
+    email: '',
+    bidtype: '',
   });
   const [wholeBid, setWholeBid] = useState({
     name: '',
     price: '',
     description: '',
+    email: '',
+    bidtype: '',
   });
+  const [bids, setBids] = useState([]); // State to hold all bids
   const params = useParams();
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -46,6 +51,9 @@ const BidsDetail = () => {
         setPosting(data);
         setLoading(false);
         setError(false);
+        if (data.bid) {
+          setBids(data.bid); // Set initial bids if available
+        }
       } catch (error) {
         setError(true);
         setLoading(false);
@@ -69,14 +77,20 @@ const BidsDetail = () => {
         bid: {
           name: subBid.name,
           description: subBid.description,
-          price: subBid.price, 
+          price: subBid.price,
+          bidtype: subBid.bidtype,
+          email: subBid.email,
         },
       });
       setSubBid({
         name: '',
         description: '',
         price: '',
+        bidtype: '',
+        email: '',
       });
+      // Add the new bid to the existing list of bids
+      setBids([...bids, subBid]);
       // Handle success
     } catch (error) {
       // Handle error
@@ -90,14 +104,20 @@ const BidsDetail = () => {
         bid: {
           name: wholeBid.name,
           description: wholeBid.description,
-          price: wholeBid.price, // Assuming this calculates the next offer price
+          price: wholeBid.price, 
+          bidtype: wholeBid.bidtype,
+          email: wholeBid.email
         },
       });
       setWholeBid({
         name: '',
         description: '',
         price: '',
+        bidtype: '',
+        email: '',
       });
+      // Add the new bid to the existing list of bids
+      setBids([...bids, wholeBid]);
       // Handle success
     } catch (error) {
       // Handle error
@@ -180,6 +200,32 @@ const BidsDetail = () => {
                   onChange={handleSubBidChange} 
                 />
               </div>
+              <div className='mb-4'>
+                <label htmlFor='subBidType' className='block font-semibold'>
+                  Bid type: Whole or Sub
+                </label>
+                <input
+                  type='text'
+                  id='subBidType'
+                  name='bidtype' 
+                  className='w-full  border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500'
+                  value={subBid.bidtype}
+                  onChange={handleSubBidChange} 
+                />
+              </div>
+              <div className='mb-4'>
+                <label htmlFor='subBidEmail' className='block font-semibold'>
+                  Email:
+                </label>
+                <input
+                  type='text'
+                  id='subBidEmail'
+                  name='email' 
+                  className='w-full  border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500'
+                  value={subBid.email}
+                  onChange={handleSubBidChange} 
+                />
+              </div>
               <button
                 type='submit'
                 className='bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500'
@@ -230,6 +276,32 @@ const BidsDetail = () => {
                   onChange={handleWholeBidChange} // Add onChange handler
                 />
                 </div>
+                <div className='mb-4'>
+                <label htmlFor='wholeBidType' className='block font-semibold'>
+                Bid type: Whole or Sub
+                </label>
+                  <input
+                  type='text'
+                  id='wholeBidType'
+                  name='bidtype' // Change name attribute to 'price'
+                  className='w-full  border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500'
+                  value={wholeBid.bidtype}
+                  onChange={handleWholeBidChange} // Add onChange handler
+                />
+                </div>
+                <div className='mb-4'>
+                <label htmlFor='wholeBidEmail' className='block font-semibold'>
+                  Email:
+                </label>
+                  <input
+                  type='text'
+                  id='wholeBidEmail'
+                  name='email' // Change name attribute to 'price'
+                  className='w-full  border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500'
+                  value={wholeBid.email}
+                  onChange={handleWholeBidChange} // Add onChange handler
+                />
+                </div>
               <button
                 type='submit'
                 className='bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500'
@@ -242,15 +314,17 @@ const BidsDetail = () => {
       </div>
       <h2 className='text-lg font-semibold mb-2'>Bids</h2>
     <div className="bg-gray-100 p-4 text-left rounded-lg">
-      {/* Check if posting is available and it has bids */}
-      {posting && posting.bid && posting.bid.length > 0 ? (
+      {/* Check if bids array has any bids */}
+      {bids.length > 0 ? (
         // If yes, map over the bids and render their details
-        posting.bid.map((bid, index) => (
-          <div key={bid._id} className="mb-4">
+        bids.map((bid, index) => (
+          <div key={index} className="mb-4">
             <h3 className="font-semibold mb-1">Bid {index + 1}</h3>
             <p><strong>Name:</strong> {bid.name}</p>
             <p><strong>Description:</strong> {bid.description}</p>
             <p><strong>Price:</strong> {bid.price}</p>
+            <p><strong>Bid type:</strong> {bid.bidtype}</p>
+            <p><strong>Email:</strong> {bid.email}</p>
           </div>
         ))
       ) : (

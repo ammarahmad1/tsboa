@@ -1,20 +1,21 @@
 import React, { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import Eventpic from './Images/eventthumbnail.jpg'
+import {  useNavigate } from 'react-router-dom';
+
 import { CiLocationOn } from "react-icons/ci";
 import { CiCalendarDate } from "react-icons/ci";
 import { CiTimer } from "react-icons/ci";
 import { IoTicketOutline } from "react-icons/io5";
-import speakerimage from './Images/emma.jpg';
+
 import { Navigation } from 'swiper/modules';
 import { useState } from 'react';
-import eventthumbnail from './Images/eventthumbnail.jpg';
-import eventthumbnail1 from './Images/eventthumbnail1.jpg';
-import eventthumbnail2 from './Images/eventthumbnail2.jpg';
+
 import { useParams } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
 import axios from 'axios';
+
+
+
 
 const EventDetail = () => {
   SwiperCore.use([Navigation]);
@@ -88,10 +89,11 @@ const EventDetail = () => {
             <div className='max-w-[1340px] max-h-[606px] border-radius-2 rounded-3xl overflow-hidden mx-auto relative'>
               {/* Background Image */}
               <img src={imageUrl} alt={`Event Image ${index}`} className='w-full h-[720px] object-cover rounded-3xl' />
-              <div className='absolute bottom-4 left-0 p-6 text-white text-left sm:w-[343px] sm:min-h-[274px]'>
-                <h1 className='text-lg lg:w-[1308px] sm:w-[243px] font-semibold font-inter text-left tracking-tighter '>
-                  {event && event.data.eventName}
-                </h1>
+              <div className='absolute bottom-4 left-0 p-6 text-white text-left sm:w-[343px]'>
+              <h1 className='text-2xl lg:w-[1308px] sm:w-[243px] font-semibold font-inter text-left tracking-tighter'>
+                {event && event.data.eventName}
+              </h1>
+
               </div>
             </div>
           </SwiperSlide>
@@ -109,7 +111,7 @@ const EventDetail = () => {
         <p className='py-2 flex text-base font-medium font-inter text-left leading-6 items-center gap-1'> <CiLocationOn /> {event && event.data.location} </p>
         <p className='py-2 flex text-base font-medium font-inter text-left leading-6 items-center gap-1'> <CiCalendarDate /> {event && event.data.date} </p>
         <p className='py-2 flex text-base font-medium font-inter text-left leading-6 items-center gap-1'> <CiTimer /> {event && event.data.date} </p>
-        <p className='py-2 flex text-base font-medium font-inter text-left leading-6 items-center gap-1'> <IoTicketOutline />Tickets.com</p>
+        <p className='py-2 flex text-base font-medium font-inter text-left leading-6 items-center gap-1'> <IoTicketOutline />{event && event.data.ticketwebsite}</p>
         </div>
         <h2 className='text-xl font-semibold font-inter text-left leading-7 py-6'>Event Speakers</h2>
         <div class="flex items-center">

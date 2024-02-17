@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { database } from "../firebase";
 
-import { Navigate } from 'react-router-dom';
 const ResetPassword = () => {
-  const history = useNavigate();
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -13,7 +13,7 @@ const ResetPassword = () => {
       const emailVal = e.target.email.value;
       await sendPasswordResetEmail(database.auth, emailVal);
       alert("Check your email for reset instructions");
-      history("/");
+      navigate('/signin')
     } catch (error) {
       alert(error.message); // Display the error message
     }

@@ -4,6 +4,14 @@ const bidSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  bidtype: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true
+  },
   description: {
     type: String,
     required: true
@@ -11,7 +19,7 @@ const bidSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: true
-  }
+  },
 });
 
 const postingSchema = new mongoose.Schema(

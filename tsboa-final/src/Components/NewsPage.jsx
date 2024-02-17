@@ -46,7 +46,7 @@ const NewsPage = () => {
         {news.map((news) => (
           <Link to={`/newsdetail/${news._id}`} key={news._id} className="w-full bg-white flex-none rounded-lg overflow-hidden">
             {/* News Image */}
-            <div className="w-full h-[240px] bg-cover bg-center rounded-lg" style={{ backgroundImage: `url(${newsthumbnail1})` }}></div>
+            <div className="w-full h-[240px] bg-cover bg-center rounded-lg" style={{ backgroundImage: `url(${news.imageUrls})` }}></div>
 
             {/* News Details */}
             <div className="py-4 gap-4 text-left">

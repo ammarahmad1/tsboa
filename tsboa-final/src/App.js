@@ -43,7 +43,12 @@ function App() {
           <Route path="/buymembership" element={<BuyMembership />} />
         
           <Route path="/membership" element={<BuyMembership />} />
-
+          <Route path="/events" element={<EventsPage />} />
+          <Route path="/eventdetail/:eventId" element={<EventDetail />} />
+          <Route path="/newspage" element={<NewsPage />} />
+          <Route path="/newsdetail/:newsId" element={<NewsDetail />} />
+          <Route path="/endorsments" element={<Endorsments />} />
+          <Route path="/endorsmentdetail/:endorsmentId" element={<EndorsmentsDetail />} />
         {/* User routes */}
             <Route element={<PrivateRoute /> } >
             <Route path="/createposting" element={<CreatePosting />} />
@@ -53,12 +58,9 @@ function App() {
             <Route path="/businessdirectory" element={<BusinessDirectory />} />   
             <Route path="/businessdirectorydetails/:businessId" element={<BusinessDirectoryDetails />} />         
             <Route path="/vendorrecomendationdetail/:vendorsId" element={<VendorRecomendationDetail />} />   
-            <Route path="/events" element={<EventsPage />} />
-            <Route path="/eventdetail/:eventId" element={<EventDetail />} />
-            <Route path="/newspage" element={<NewsPage />} />
-            <Route path="/newsdetail/:newsId" element={<NewsDetail />} />
-            <Route path="/endorsments" element={<Endorsments />} />
-            <Route path="/endorsmentdetail/:endorsmentId" element={<EndorsmentsDetail />} />
+          
+           
+           
            
 
             <Route path="/bids" element={<Bids />} />   

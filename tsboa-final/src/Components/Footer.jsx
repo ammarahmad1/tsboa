@@ -10,6 +10,7 @@ const Footer = () => {
         <img src={logo} alt="Logo" className="h-41 w-113 mb-6 lg:mb-0" />
 
         {/* Newsletter Subscription */}
+        {/*
         <div className="flex flex-col lg:flex-row max-w-md gap-y-4 lg:gap-x-4 lg:ml-auto">
           <label htmlFor="email-address" className="sr-only">Email address</label>
           <input
@@ -28,15 +29,16 @@ const Footer = () => {
             Subscribe
           </button>
         </div>
+        */}
       </div>
 
       {/* Navigation Links */}
       <nav className="mt-4 flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
         <Link to="/" className="hover:text-gray-300">Home</Link>
         <Link to="/endorsments" className="hover:text-gray-300">Endorsements</Link>
-        <Link to="/newspage" className="hover:text-gray-300">Information</Link>
-        <Link to="/" className="hover:text-gray-300">Business-Directory</Link>
+        <Link to="/businessdirectory" className="hover:text-gray-300">Business-Directory</Link>
         <Link to="/events" className="hover:text-gray-300">Events</Link>
+        <Link to="/news" className="hover:text-gray-300">News</Link>
       </nav>
 
       {/* Copyright and Links */}

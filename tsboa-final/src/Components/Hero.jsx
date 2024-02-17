@@ -13,7 +13,7 @@ const HeroSection = () => {
             <p className="mt-6 text-lg leading-8 text-gray-600">Your Gateway to Informed Decision-Making and Active Participation.</p>
           
             <div className="flex w-full h-[48px] gap-4 mt-3">
-              <Link to="/signup">
+              <Link to="/membership">
               <button
                 className="flex-1 p-[12px, 18px, 12px, 18px] border  border-[#0E214B] bg-[#0E214B] text-white rounded-md"
               >

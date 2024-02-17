@@ -107,15 +107,9 @@ const Signin = () => {
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 </label>
-              <div className="text-sm">
-                <a  href="/resetpassword" className="font-semibold text-[] hover:text-indigo-500">
-                  Forgot password?
-                </a>
-              </div>
-            </div>
-            <div className="mt-2">
              
             </div>
+           
           </div>
 
           <div>
@@ -148,8 +142,8 @@ const Signin = () => {
 
           <p className="mt-4 text-center text-sm text-gray-500">
             Not a member?{' '}
-            <a href="./signup" className="font-semibold leading-6 text-[#0E214B] hover:text-indigo-500">
-              Sign up
+            <a href="./membership" className="font-semibold leading-6 text-[#0E214B] hover:text-indigo-500">
+              Click here
             </a>
           </p>
         </div>

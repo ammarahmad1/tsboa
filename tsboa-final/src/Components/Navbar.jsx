@@ -117,11 +117,7 @@ const Navbar = () => {
               Login
             </Link>
             </button>
-            <button className='min-w-[120px] h-10 border border-[#0E214B] bg-[#0E214B] text-white font-semibold rounded-md'>
-            <Link to="./signup" onClick={closeMenu}>
-              Register
-            </Link>
-            </button>
+           
             </div>
             )}
           </div>
@@ -178,11 +174,7 @@ const Navbar = () => {
             Login
           </Link>
         </button>
-        <button className='p-2 min-w-101 h-10 border border-[#0E214B] bg-[#0E214B] text-white font-semibold rounded-md'>
-           <Link to="./signup" onClick={closeMenu}>
-              Register
-            </Link>
-        </button>
+        
         </div>
             )}
       </div>

@@ -1,9 +1,9 @@
-// PaymentForm.js
-
 import React, { useState } from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useDispatch } from 'react-redux';
 import { signInSuccess } from '../redux/user/userSlice'; 
+import {  useNavigate } from 'react-router-dom';
+
 const PaymentForm = () => {
   const [paymentError, setPaymentError] = useState(null);
   const [name, setName] = useState('');
@@ -11,6 +11,7 @@ const PaymentForm = () => {
   const stripe = useStripe();
   const elements = useElements();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -49,6 +50,7 @@ const PaymentForm = () => {
       if (response.ok) {
         // Payment successful, dispatch action to update isLoggedIn state
         dispatch(signInSuccess()); // Dispatch the signInSuccess action
+        navigate('/signup');
       } else {
         // Payment failed, show error message
         setPaymentError(responseData.error);
@@ -57,7 +59,10 @@ const PaymentForm = () => {
   };
 
   return (
+    <div>
+      <h3 className="text-xl font-bold mb-4 mt-4 text-gray-700">Pay just 10$ to access everything</h3>
     <form onSubmit={handleSubmit} className="max-w-sm mx-auto mt-8 p-4 border rounded-lg shadow-lg">
+      
       <div className="mb-4">
         <input 
           type="text" 
@@ -84,6 +89,8 @@ const PaymentForm = () => {
         Pay
       </button>
     </form>
+    </div>
+
   );
 };
 

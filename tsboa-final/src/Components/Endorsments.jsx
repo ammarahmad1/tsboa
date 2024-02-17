@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CiSearch } from "react-icons/ci";
-import companylogo from './Images/companylogo.jpg';
-import companylogo2 from './Images/companylogo2.jpg';
-import companylogo3 from './Images/companylogo3.jpg';
-import endorsmentthumbnail1 from './Images/endorsmentthumbnail.jpg';
-import endorsmentthumbnail2 from './Images/endorsmentthumbnail1.jpg';
-import endorsmentthumbnail3 from './Images/endorsmentthumbnail2.jpg';
-import endorsmentthumbnail4 from './Images/endorsmentthumbnail3.jpg';
+
 import axios from 'axios';
 
 const Endorsments = () => {

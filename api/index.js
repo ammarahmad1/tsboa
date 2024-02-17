@@ -43,23 +43,19 @@ app.listen(5000, () => {
 });
 
 app.post('/api/buymembership', async (req, res) => {
-  const { token } = req.body;
-
+  const amount = 1000; // Amount in cents (10 dollars)
+  
   try {
-    const charge = await stripe.charges.create({
-      amount: 1000, // Amount in cents
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amount,
       currency: 'usd',
-      description: 'Membership Payment',
-      source: token.id,
+      payment_method_types: ['card'],
     });
 
-    // Handle successful payment
-    // For example, update user status to indicate membership
-
-    res.json({ success: true });
+    res.status(200).json({ client_secret: paymentIntent.client_secret });
   } catch (error) {
-    console.error('Error processing payment:', error);
-    res.status(500).json({ error: 'Payment failed' });
+    console.error('Error creating payment intent:', error);
+    res.status(500).send({ error: 'Error creating payment intent' });
   }
 });
 

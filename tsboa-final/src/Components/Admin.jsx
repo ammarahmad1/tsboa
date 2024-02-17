@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import businessdir from './Images/businessdir.jpg'
-import newsthumbnail1 from './Images/newsthumbnail1.jpg';
+import Homepagecontentupload from './Homepagecontentupload';
 import axios from 'axios';
 import { CiLocationOn } from "react-icons/ci";
 import { MdOutlineEmail } from "react-icons/md";
@@ -22,6 +21,7 @@ const Admin = () => {
   const navigate = useNavigate();
   const [successMessage, setSuccessMessage] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
+  
   console.log(currentUser._id)
   const [imageUploadError, setImageUploadError] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -122,30 +122,31 @@ const Admin = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      
       try {
-       
-        // const user = /* Fetch user information or from context */;
-        const user = currentUser; // Assuming currentUser is the user object from Redux
-  
+        if (!currentUser) {
+          // currentUser is not available, show error message and redirect
+          alert('Failed to fetch user data. You cannot access the admin page.');
+          navigate('/');
+          return;
+        }
+
         // Check if the user has admin privileges based on email or ID
         const hasAdminPrivileges =
-          user &&
-          (user.email === 'tsboaa@gmail.com' || user._id === '658eb5cf48d721a2cf795fad');
-          console.log(user)
+          currentUser &&
+          (currentUser.email === 'tsboaa@gmail.com' || currentUser._id === '658eb5cf48d721a2cf795fad');
+
         // If user is not an admin, redirect or show a message
         if (!hasAdminPrivileges) {
           // Redirect or show a message (modify this part according to your application)
-          alert('You can not access admin page');
-          navigate('/')
+          alert('You cannot access the admin page');
+          navigate('/');
         }
-  
-        setIsAdmin(hasAdminPrivileges);
       } catch (error) {
         // Handle error
         console.error('Error fetching user data:', error);
       }
     };
+
   
     fetchUserData();
   }, [currentUser]);
@@ -337,6 +338,7 @@ const Admin = () => {
     description: '',
     speaker: '',
     date: '',
+    ticketwebsite: '',
     offer: '',
     vipoffer: '',
     imageUrls: [],
@@ -601,6 +603,16 @@ const Admin = () => {
             />
           </div>
           <div>
+            <label className="block text-sm text-gray-600">Ticket website</label>
+            <input
+              type="text"
+              name="ticketwebsite"
+              value={eventFormData.ticketwebsite}
+              onChange={handleEventChange}
+              className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <div>
             <label className="block text-sm text-gray-600">Date</label>
             <input
               type="datetime-local"
@@ -611,47 +623,28 @@ const Admin = () => {
             />
           </div>
           <div className='flex gap-4'>
-        <input
-          onChange={(e) => setFiles(e.target.files)}
-          className='p-3 border border-gray-300 rounded w-full'
-          type='file'
-          id='images'
-          accept='image/*'
-          multiple
-        />
+          <p>Upload images</p>
+          <input
+            onChange={(e) => handleImageSubmit(e, setEventFormData)}
+            className="p-3 border border-gray-300 rounded w-full"
+            type="file"
+            id="images"
+            accept="image/*"
+            multiple
+          />
+          {eventFormData.imageUrls.map((url, index) => (
+            <div key={url}>
+              <img src={url} className='h-[100px] w-[100px]' alt="Uploaded" />
+              
+            </div>
+          ))}
         <p className='text-gray-600'>Picture should be of size 2160 x 1259 pixels</p>
-        <button
-          type="button"
-          disabled={uploading}
-          onClick={handleImageSubmit}
-          className="p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80"
-        >
-          {uploading ? 'Uploading...' : 'Upload'}
-        </button>
+        
       </div>
           <p className='text-red-700 text-sm'>
             {imageUploadError && imageUploadError}
           </p>
-          {eventFormData.imageUrls.length > 0 &&
-            eventFormData.imageUrls.map((url, index) => (
-              <div
-                key={url}
-                className='flex justify-between p-3 border items-center'
-              >
-                <img
-                  src={url}
-                  alt='Posting image'
-                  className='w-20 h-20 object-contain rounded-lg'
-                />
-                <button
-                  type='button'
-                  onClick={() => handleRemoveImage(index)}
-                  className='p-3 text-red-700 rounded-lg uppercase hover:opacity-75'
-                >
-                  Delete
-                </button>
-              </div>
-            ))}
+         
                 </div>
         <button
           type="submit"
@@ -754,6 +747,7 @@ const Admin = () => {
               className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
             />
           </div>
+          <p>Upload picture</p>
           <input
           onChange={(e) => handleImageSubmit(e, setNewsFormData)}
           className='p-3 border border-gray-300 rounded w-full'
@@ -762,6 +756,7 @@ const Admin = () => {
           accept='image/*'
           multiple
         />
+        
         {newsFormData.imageUrls.map((url, index) => (
           <div key={url}>
             <img src={url} alt='Uploaded' />
@@ -781,10 +776,10 @@ const Admin = () => {
           <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 mt-10 mb-4 flex'>
             {news.map((news) => (
               <Link to={`../admin`} key={news._id} className='w-full bg-white flex-none rounded-lg overflow-hidden'>
-                {/* Business Image */}
+             
                 <div
                   className='w-full h-[144px] bg-cover bg-center rounded-t-lg'
-                  style={{ backgroundImage: `url(${newsthumbnail1})` }}
+                  style={{ backgroundImage: `url(${news.imageUrls[0]})` }}
                 ></div>
 
               <div className="py-4 px-4 gap-4 text-left">
@@ -982,9 +977,11 @@ const Admin = () => {
         Create Endorsment
       </button>
     </form>
-    <div className='flex flex-wrap w-[450px]'>
+    <div className=" mr-4 max-w-7xl px-6 lg:px-8">
+    <div className=" mt-10 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200  sm:mt-16  lg:mx-0 lg:max-w-none lg:grid-cols-3">
+   
     {endorsements.map((endorsement, index) => (
-    <Link to={`/endorsmentdetail/${endorsement._id}`} key={index} className="w-[400px] mb-2 bg-white p-3 border border-gray flex-none rounded-lg overflow-hidden">
+    <Link to={`/}`} key={index} className="w-[400px] mb-2 mr-5 bg-white p-3 border border-gray flex-none rounded-lg overflow-hidden">
     
       <div className="w-[400px] h-[240px] bg-cover bg-center rounded-lg" style={{ backgroundImage: `url(${endorsement.imageUrls})` }}>
       </div>
@@ -1011,6 +1008,8 @@ const Admin = () => {
               </button>
     </Link>
   ))}      
+  </div>
+
   </div>           
       {/* Vendor */}
       <div className=" mx-auto mt-8">
@@ -1031,20 +1030,24 @@ const Admin = () => {
           <textarea id="description" name="description" value={vendorData.description} onChange={handleChange} className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500" required />
         </div>
         <p>Upload Picture</p>
-        <input
-          onChange={(e) => handleImageSubmit(e, setVendorData)}
-          className='p-3 border border-gray-300 rounded w-full'
-          type='file'
-          id='images'
-          accept='image/*'
-          multiple
-        />
-        {vendorData.imageUrls.map((url, index) => (
-          <div key={url}>
-            <img src={url} alt='Uploaded' />
-            <button onClick={() => handleRemoveImage(index, setBusinessFormData)}>Remove</button>
-          </div>
-        ))}
+        <p>Upload images</p>
+          <input
+            onChange={(e) => handleImageSubmit(e, setVendorData)}
+            className="p-3 border border-gray-300 rounded w-full"
+            type="file"
+            id="images"
+            accept="image/*"
+            multiple
+          />
+          {eventFormData.imageUrls.map((url, index) => (
+            <div key={url}>
+              <img src={url} className='h-[100px] w-[100px]' alt="Uploaded" />
+              <button onClick={() => handleRemoveImage(index, setEventFormData)}>Remove</button>
+            </div>
+          ))}
+        <p className='text-gray-600'>Picture should be of size 2160 x 1259 pixels</p>
+        
+        
         <div className="mt-6">
           <h3 className="text-lg font-semibold mb-2">Services</h3>
           {vendorData.services.map((service, index) => (
@@ -1158,12 +1161,7 @@ const Admin = () => {
           accept='image/*'
           multiple
         />
-        {businessFormData.imageUrls.map((url, index) => (
-          <div key={url}>
-            <img src={url} alt='Uploaded' />
-            <button onClick={() => handleRemoveImage(index, setBusinessFormData)}>Remove</button>
-          </div>
-        ))}
+       
         <button
           type="submit"
           className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-700"
@@ -1180,7 +1178,7 @@ const Admin = () => {
               <div
                 className='w-full h-[144px] bg-cover bg-center rounded-t-lg'
                 style={{
-                  backgroundImage: `url(${businessdir})`,
+                  backgroundImage: `url(${business.imageUrls})`,
                   width: '388px',
                   height: '144px',
                   borderRadius: '8px',
@@ -1206,153 +1204,7 @@ const Admin = () => {
       </div>
     </div>
     <h3 className="text-xl font-bold mb-4 text-gray-700">Add contents in Homepage</h3>
-    <form onSubmit={handlehomepageSubmit} className="max-w-lg mx-auto">
-  {/* First Section */}
-  <div className="mb-4">
-    <label htmlFor="firstsectionHeading" className="block font-semibold">First Section Heading:</label>
-    <input
-      type="text"
-      id="firstsectionHeading"
-      name="firstsectionHeading"
-      value={formData.firstsectionHeading}
-      onChange={handleHomepageChange}
-      className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-    />
-  </div>
-  <div className="mb-4">
-    <label htmlFor="firstsectiontext" className="block font-semibold">First Section Text:</label>
-    <input
-      type="text"
-      id="firstsectiontext"
-      name="firstsectiontext"
-      value={formData.firstsectiontext}
-      onChange={handleHomepageChange}
-      className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-    />
-  </div>
-  <div className="mb-4">
-    <label htmlFor="firstsectionlink" className="block font-semibold">First Section Link:</label>
-    <input
-      type="text"
-      id="firstsectionlink"
-      name="firstsectionlink"
-      value={formData.firstsectionlink}
-      onChange={handleHomepageChange}
-      className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-    />
-  </div>
-
-  {/* Second Section */}
-  <div className="mb-4">
-    <label htmlFor="secondsectionHeading" className="block font-semibold">Second Section Heading:</label>
-    <input
-      type="text"
-      id="secondsectionHeading"
-      name="secondsectionHeading"
-      value={formData.secondsectionHeading}
-      onChange={handleHomepageChange}
-      className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-    />
-  </div>
-  <div className="mb-4">
-    <label htmlFor="secondsectiontext" className="block font-semibold">Second Section Text:</label>
-    <input
-      type="text"
-      id="secondsectiontext"
-      name="secondsectiontext"
-      value={formData.secondsectiontext}
-      onChange={handleHomepageChange}
-      className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-    />
-  </div>
-  <div className="mb-4">
-    <label htmlFor="secondsectionlink" className="block font-semibold">Second Section Link:</label>
-    <input
-      type="text"
-      id="secondsectionlink"
-      name="secondsectionlink"
-      value={formData.secondsectionlink}
-      onChange={handleHomepageChange}
-      className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-    />
-  </div>
-
-  <div className="mb-4">
-    <label htmlFor="thirdsectionHeading" className="block font-semibold">Third Section Heading:</label>
-    <input
-      type="text"
-      id="thirdsectionHeading"
-      name="thirdsectionHeading"
-      value={formData.thirdsectionHeading}
-      onChange={handleHomepageChange}
-      className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-    />
-  </div>
-  <div className="mb-4">
-    <label htmlFor="thirdsectiontext" className="block font-semibold">Third Section Text:</label>
-    <input
-      type="text"
-      id="thirdsectiontext"
-      name="thirdsectiontext"
-      value={formData.thirdsectiontext}
-      onChange={handleHomepageChange}
-      className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-    />
-  </div>
-  <div className="mb-4">
-    <label htmlFor="thirdsectionlink" className="block font-semibold">Third Section Link:</label>
-    <input
-      type="text"
-      id="thirdsectionlink"
-      name="thirdsectionlink"
-      value={formData.thirdsectionlink}
-      onChange={handleHomepageChange}
-      className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-    />
-  </div>
-
-  {/* Fourth Section */}
-  <div className="mb-4">
-    <label htmlFor="fourthsectionHeading" className="block font-semibold">Fourth Section Heading:</label>
-    <input
-      type="text"
-      id="fourthsectionHeading"
-      name="fourthsectionHeading"
-      value={formData.fourthsectionHeading}
-      onChange={handleHomepageChange}
-      className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-    />
-  </div>
-  <div className="mb-4">
-    <label htmlFor="fourthsectiontext" className="block font-semibold">Fourth Section Text:</label>
-    <input
-      type="text"
-      id="fourthsectiontext"
-      name="fourthsectiontext"
-      value={formData.fourthsectiontext}
-      onChange={handleHomepageChange}
-      className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-    />
-  </div>
-  <div className="mb-4">
-    <label htmlFor="fourthsectionlink" className="block font-semibold">Fourth Section Link:</label>
-    <input
-      type="text"
-      id="fourthsectionlink"
-      name="fourthsectionlink"
-      value={formData.fourthsectionlink}
-      onChange={handleHomepageChange}
-      className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-    />
-  </div>
-
-  <button
-    type="submit"
-    className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-  >
-    Update Homepage
-  </button>
-</form>
+    <Homepagecontentupload />
 
     </div>  
   );

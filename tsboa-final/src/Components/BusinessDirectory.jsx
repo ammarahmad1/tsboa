@@ -54,7 +54,7 @@ const BusinessDirectory = () => {
               <div
                 className='w-full h-[144px] bg-cover bg-center rounded-t-lg'
                 style={{
-                  backgroundImage: `url(${business.imageUrls[0]})`, // Replaced with first image URL
+                  backgroundImage: `url(${business.imageUrls[0]})`, 
                   width: '388px',
                   height: '144px',
                   borderRadius: '8px',

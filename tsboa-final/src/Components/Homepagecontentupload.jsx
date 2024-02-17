@@ -1,6 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { app } from '../firebase';
 
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from 'firebase/storage';
 
 const Homepagecontentupload = () => {
     const handleHomepageChange = (e) => {
@@ -19,6 +26,10 @@ const Homepagecontentupload = () => {
         fourthsectionHeading: '',
         fourthsectiontext: '',
         fourthsectionlink: '',
+        firstimageUrls:[],
+        secondimageUrls:[],
+        thirdimageUrls:[],
+        fourthimageUrls:[],
       });
 
       const handlehomepageSubmit = async (e) => {
@@ -32,7 +43,64 @@ const Homepagecontentupload = () => {
           console.error('Error updating homepage:', error);
         }
       };
+      const handleImageSubmit = (e, section) => {
+        const files = Array.from(e.target.files);
+        if (files.length > 0) {
+          const promises = [];
     
+          for (let i = 0; i < files.length; i++) {
+            promises.push(storeImage(files[i], section));
+          }
+          Promise.all(promises)
+            .then((urls) => {
+              setFormData((prevFormData) => ({
+                ...prevFormData,
+                [`${section}imageUrls`]: prevFormData[`${section}imageUrls`].concat(urls),
+              }));
+            })
+            .catch((err) => {
+              console.error('Error uploading images:', err);
+            });
+        }
+      };
+    
+    
+
+      
+  const storeImage = async (file) => {
+    return new Promise((resolve, reject) => {
+      const storage = getStorage(app);
+      const fileName = new Date().getTime() + file.name;
+      const storageRef = ref(storage, fileName);
+  
+      if (file.size <= 5 * 1024 * 1024) {
+        const uploadTask = uploadBytesResumable(storageRef, file);
+  
+        uploadTask.on(
+          'state_changed',
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log(`Upload is ${progress}% done`);
+          },
+          (error) => {
+            reject(error);
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              resolve(downloadURL);
+            });
+          }
+        );
+      } else {
+        // Reject the promise if the file size exceeds 5MB
+        reject(new Error('File size exceeds the limit of 5MB.'));
+      }
+    });
+  };
+
+
+
   return (
     <div>
       <form onSubmit={handlehomepageSubmit} className="max-w-lg mx-auto">
@@ -70,7 +138,14 @@ const Homepagecontentupload = () => {
       className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
     />
   </div>
-
+    <input
+          onChange={(e) => handleImageSubmit(e, 'first')}
+          className='p-3 border border-gray-300 rounded w-full'
+          type='file'
+          id='images'
+          accept='image/*'
+          multiple
+        />
   {/* Second Section */}
   <div className="mb-4">
     <label htmlFor="secondsectionHeading" className="block font-semibold">Second Section Heading:</label>
@@ -105,7 +180,14 @@ const Homepagecontentupload = () => {
       className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
     />
   </div>
-
+  <input
+          onChange={(e) => handleImageSubmit(e, 'second')}
+          className='p-3 border border-gray-300 rounded w-full'
+          type='file'
+          id='images'
+          accept='image/*'
+          multiple
+        />
   <div className="mb-4">
     <label htmlFor="thirdsectionHeading" className="block font-semibold">Third Section Heading:</label>
     <input
@@ -139,7 +221,14 @@ const Homepagecontentupload = () => {
       className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
     />
   </div>
-
+  <input
+          onChange={(e) => handleImageSubmit(e, 'third')}
+          className='p-3 border border-gray-300 rounded w-full'
+          type='file'
+          id='images'
+          accept='image/*'
+          multiple
+        />
   {/* Fourth Section */}
   <div className="mb-4">
     <label htmlFor="fourthsectionHeading" className="block font-semibold">Fourth Section Heading:</label>
@@ -174,7 +263,14 @@ const Homepagecontentupload = () => {
       className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
     />
   </div>
-
+  <input
+          onChange={(e) => handleImageSubmit(e, 'fourth')}
+          className='p-3 border border-gray-300 rounded w-full'
+          type='file'
+          id='images'
+          accept='image/*'
+          multiple
+        />
   <button
     type="submit"
     className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"

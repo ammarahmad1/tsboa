@@ -324,12 +324,7 @@ const Admin = () => {
     });
   };
 
-  const handleRemoveImage = (index) => {
-    setEventFormData({
-      ...eventFormData,
-      imageUrls: eventFormData.imageUrls.filter((_, i) => i !== index),
-    });
-  };
+
   
   // State for handling form data
   const [eventFormData, setEventFormData] = useState({
@@ -760,7 +755,7 @@ const Admin = () => {
         {newsFormData.imageUrls.map((url, index) => (
           <div key={url}>
             <img src={url} alt='Uploaded' />
-            <button onClick={() => handleRemoveImage(index, setNewsFormData)}>Remove</button>
+
           </div>
         ))}
         </div>
@@ -967,7 +962,7 @@ const Admin = () => {
       {endorsmentFormData.imageUrls.map((url, index) => (
         <div key={url}>
           <img src={url} className='h-[100px] w-[100px]' alt="Uploaded" />
-          <button onClick={() => handleRemoveImage(index, setEndorsmentFormData)}>Remove</button>
+
         </div>
       ))}
       <button
@@ -1042,7 +1037,7 @@ const Admin = () => {
           {eventFormData.imageUrls.map((url, index) => (
             <div key={url}>
               <img src={url} className='h-[100px] w-[100px]' alt="Uploaded" />
-              <button onClick={() => handleRemoveImage(index, setEventFormData)}>Remove</button>
+
             </div>
           ))}
         <p className='text-gray-600'>Picture should be of size 2160 x 1259 pixels</p>
@@ -1152,7 +1147,7 @@ const Admin = () => {
             />
           </div>
         </div>
-        <p>Upload two pictures</p>
+
         <input
           onChange={(e) => handleImageSubmit(e, setBusinessFormData)}
           className='p-3 border border-gray-300 rounded w-full'

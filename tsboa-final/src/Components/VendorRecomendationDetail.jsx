@@ -3,16 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { CiLocationOn } from 'react-icons/ci';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
-import headervendor from './Images/Headervendor.jpg';
-import servicepic from './Images/servicepic.jpg';
-import StarRating from './StarRating'; 
-import vendorthumbnail from './Images/vendorthumbnail.jpg';
-import vendorthumbnail2 from './Images/vendorthumbnail2.jpg';
-import vendorthumbnail3 from './Images/vendorthumbnail3.jpg';
-
+import { Swiper, SwiperSlide } from 'swiper/react';
+import SwiperCore from 'swiper';
 
 const VendorRecomendationDetail = () => {
+  
   const navigate = useNavigate();
   const params = useParams();
   const [vendors, setVendors] =useState(null);
@@ -66,6 +61,7 @@ const VendorRecomendationDetail = () => {
 
   return (
     <div className='py-4 px-4'>
+
       {vendors && vendors.data.imageUrls.length > 0 && (
       <img 
         src={vendors.data.imageUrls[0]} 

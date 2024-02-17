@@ -66,6 +66,22 @@ const homepageSchema = new mongoose.Schema({
     type: Array,
     required: true,
   },
+  firstimageUrls:{
+    type: Array,
+    required: true,
+  },
+  secondimageUrls:{
+    type: Array,
+    required: true,
+  },
+  thirdimageUrls:{
+    type: Array,
+    required: true,
+  },
+  fourthimageUrls:{
+    type: Array,
+    required: true,
+  },
   }, { timestamps: true });
 
 const Homepage = mongoose.model('Homepage', homepageSchema);

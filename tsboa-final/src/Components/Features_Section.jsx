@@ -59,7 +59,7 @@ const Features_Section = () => {
               </Link>
             </div>
           </div>
-          <img src={heroImage} alt="meeting-picture" className="w-full h-96 object-cover mt-6 rounded-xl shadow-xl ring-1 ring-gray-400/10" />
+          <img src={homepage.firstimageUrls} alt="meeting-picture" className="w-full h-96 object-cover mt-6 rounded-xl shadow-xl ring-1 ring-gray-400/10" />
         </div>
 
         {/* Desktop View */}
@@ -82,7 +82,7 @@ const Features_Section = () => {
             </div>
           </div>
       
-          <img src={homepage.firstsectionimageUrls} alt="meeting-picture" className="w-full h-720px max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 object-cover" />
+          <img src={homepage.firstimageUrls} alt="meeting-picture" className="w-full h-720px max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 object-cover" />
         </div>
       </div>
     </div>
@@ -110,7 +110,7 @@ const Features_Section = () => {
     <div className="w-full h-full gap-4 p-8 sm:p-0">
     
       <img
-        src={homepage.secondsectionimageUrls}
+        src={homepage.secondimageUrls} 
         alt="Discover Image"
         className="w-full h-full object-cover rounded-md sm:p-0 sm:h-[400px] sm:w-[full]"
       />
@@ -121,7 +121,7 @@ const Features_Section = () => {
       <div className=" gap-4 p-8 sm:p-0">
         {/* Replace 'your-image-path.jpg' with the actual path of your image */}
         <img
-          src={homepage.thirdsectionimageUrls}
+          src={homepage.thirdimageUrls} 
           alt="Discover Image"
           className="object-cover rounded-md  sm:p-0 sm:h-[400px] sm:w-[full]"
         />
@@ -166,7 +166,7 @@ const Features_Section = () => {
     <div className=" gap-4 p-8 sm:p-0 ">
     
       <img
-        src={homepage.fourthsectionimageUrls}
+        src={homepage.fourthimageUrls} 
         alt="Discover Image"
         className="object-cover rounded-md  sm:p-0 sm:h-[400px] sm:w-[full] "
       />

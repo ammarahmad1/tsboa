@@ -8,7 +8,7 @@ const newsSchema = new mongoose.Schema({
   },
   location: {
     type: String,
-    required: true
+    required: false
   },
   description: {
     type: String,
@@ -24,9 +24,9 @@ const newsSchema = new mongoose.Schema({
   },
   date: {
     type: Date,
-    required: true,
+    required: false,
   },
-  // Add any other fields you need for newss
+  hashtags: [{ type: String }],
 }, { timestamps: true });
 
 const News = mongoose.model('News', newsSchema);

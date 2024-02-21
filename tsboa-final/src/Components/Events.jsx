@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const Events = () => {
-
   const [randomEvents, setRandomEvents] = useState([]);
 
   useEffect(() => {
@@ -18,7 +17,8 @@ const Events = () => {
           return;
         }
 
-        setRandomEvents(data || []); // Ensure that randomEvents is an array or default to an empty array
+        // Ensure that randomEvents is an array or default to an empty array
+        setRandomEvents(data.slice(0, 3) || []);
       } catch (error) {
         console.error('Error fetching random events:', error);
         // Handle error if needed

@@ -24,19 +24,19 @@ const endorsmentSchema = new mongoose.Schema({
   },
   twitter: {
     type: String,
-    required: true,
+    required: false,
   },
   linkedin: {
     type: String,
-    required: true,
+    required: false,
   },
   insta: {
     type: String,
-    required: true,
+    required: false,
   },
   website: {
     type: String,
-    required: true,
+    required: false,
   },
   location: {
     type: String,
@@ -44,11 +44,11 @@ const endorsmentSchema = new mongoose.Schema({
   },
   phone: {
     type: String,
-    required: true,
+    required: false,
   },
   date: {
     type: String,
-    required: true,
+    required: false,
   },
   imageUrls:{
     type: Array,
@@ -62,6 +62,7 @@ const endorsmentSchema = new mongoose.Schema({
     type: Array,
     required: true,
   },
+  hashtags: [{ type: String }],
 }, { timestamps: true });
 
 const Endorsment = mongoose.model('Endorsment', endorsmentSchema);

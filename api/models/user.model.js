@@ -43,6 +43,10 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    isGoldUser: {
+        type: Boolean,
+        default: false,
+    },
 }, { timestamps: true }
 );
 

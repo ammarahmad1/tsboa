@@ -37,7 +37,8 @@ const eventSchema = new mongoose.Schema({
   vipoffer: {
     type: Number,
     required: true,
-  }
+  },
+  hashtags: [{ type: String }],
 }, { timestamps: true });
 
 const Event = mongoose.model('Event', eventSchema);

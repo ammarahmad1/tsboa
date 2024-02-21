@@ -337,6 +337,7 @@ const Admin = () => {
     offer: '',
     vipoffer: '',
     imageUrls: [],
+    hashtags: [],
   });
 
   const [newsFormData, setNewsFormData] = useState({
@@ -346,6 +347,7 @@ const Admin = () => {
     author: '',
     date: '',
     imageUrls: [],
+    hashtags: [],
   });
   
   const [vendorData, setVendorData] = useState({
@@ -355,6 +357,7 @@ const Admin = () => {
     imageUrls: [],
     logo: [],
     services: [],
+    hashtags: [],
   });
 
   const [businessFormData, setBusinessFormData] = useState({
@@ -364,6 +367,7 @@ const Admin = () => {
     email: '',
     phoneNumber: '',
     imageUrls: [],
+    hashtags: [],
   });
 
   const [endorsmentFormData, setEndorsmentFormData] = useState({
@@ -383,7 +387,8 @@ const Admin = () => {
    "date":"",
    "offer":"",
    "logo":[],
-   "imageUrls":[]
+   "imageUrls":[],
+   "hashtags": [],
 
    });
   
@@ -401,7 +406,40 @@ const Admin = () => {
     fourthsectiontext: '',
     fourthsectionlink: '',
   });
-   
+
+
+
+  const handleHashtagsChange = (formDataState, setFormDataState, e) => {
+    const updatedFormData = {
+      ...formDataState,
+      [e.target.name]: e.target.value.split(",").map(tag => tag.trim()),
+    };
+    setFormDataState(updatedFormData);
+  };
+
+  // Usage examples:
+
+  const handleEventHashtagsChange = (e) => {
+    handleHashtagsChange(eventFormData, setEventFormData, e);
+  };
+
+  const handleNewsHashtagsChange = (e) => {
+    handleHashtagsChange(newsFormData, setNewsFormData, e);
+  };
+
+  const handleVendorHashtagsChange = (e) => {
+    handleHashtagsChange(vendorData, setVendorData, e);
+  };
+
+  const handleBusinessHashtagsChange = (e) => {
+    handleHashtagsChange(businessFormData, setBusinessFormData, e);
+  };
+
+  const handleEndorsementHashtagsChange = (e) => {
+    handleHashtagsChange(endorsmentFormData, setEndorsmentFormData, e);
+  };
+
+    
 
   // Function to handle event form submission
   const handleEventSubmit = async (e) => {
@@ -535,9 +573,10 @@ const Admin = () => {
       {/* Event creation form */}
       <form onSubmit={handleEventSubmit} className="mb-8 p-6 bg-white rounded-md shadow-md">
         <h3 className="text-xl font-bold mb-4 text-gray-700">Create Event</h3>
+        <p>* represents required field</p>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm text-gray-600">Event Name</label>
+            <label className="block text-sm text-gray-600">Event Name *</label>
             <input
               type="text"
               name="eventName"
@@ -547,7 +586,7 @@ const Admin = () => {
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-600">Location</label>
+            <label className="block text-sm text-gray-600">Location *</label>
             <input
               type="text"
               name="location"
@@ -558,7 +597,7 @@ const Admin = () => {
           </div>
         </div>
         <div className="mt-4">
-          <label className="block text-sm text-gray-600">Description</label>
+          <label className="block text-sm text-gray-600">Description *</label>
           <textarea
             name="description"
             value={eventFormData.description}
@@ -568,7 +607,7 @@ const Admin = () => {
         </div>
         <div className="grid grid-cols-2 gap-4 mt-4">
           <div>
-            <label className="block text-sm text-gray-600">Speaker</label>
+            <label className="block text-sm text-gray-600">Speaker *</label>
             <input
               type="text"
               name="speaker"
@@ -578,7 +617,7 @@ const Admin = () => {
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-600">Offer</label>
+            <label className="block text-sm text-gray-600">Offer *</label>
             <input
               type="text"
               name="offer"
@@ -588,7 +627,7 @@ const Admin = () => {
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-600">Vip Offer</label>
+            <label className="block text-sm text-gray-600">Vip Offer *</label>
             <input
               type="text"
               name="vipoffer"
@@ -598,7 +637,18 @@ const Admin = () => {
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-600">Ticket website</label>
+            <label className="block text-sm text-gray-600">Hashtags (upto 3) *</label>
+            <input
+              type="text"
+              name="hashtags"
+              value={eventFormData.hashtags.join(", ")}
+              onChange={handleEventHashtagsChange}
+              placeholder="Enter hashtags separated by commas"
+              className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-600">Ticket website *</label>
             <input
               type="text"
               name="ticketwebsite"
@@ -608,7 +658,7 @@ const Admin = () => {
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-600">Date</label>
+            <label className="block text-sm text-gray-600">Date *</label>
             <input
               type="datetime-local"
               name="date"
@@ -618,7 +668,7 @@ const Admin = () => {
             />
           </div>
           <div className='flex gap-4'>
-          <p>Upload images</p>
+          <p>Upload images *</p>
           <input
             onChange={(e) => handleImageSubmit(e, setEventFormData)}
             className="p-3 border border-gray-300 rounded w-full"
@@ -692,7 +742,7 @@ const Admin = () => {
         <h3 className="text-xl font-bold mb-4 text-gray-700">Create News</h3>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm text-gray-600">News Name</label>
+            <label className="block text-sm text-gray-600">News Name*</label>
             <input
               type="text"
               name="newsName"
@@ -713,7 +763,7 @@ const Admin = () => {
           </div>
         </div>
         <div className="mt-4">
-          <label className="block text-sm text-gray-600">Description</label>
+          <label className="block text-sm text-gray-600">Description*</label>
           <textarea
             name="description"
             value={newsFormData.description}
@@ -723,12 +773,23 @@ const Admin = () => {
         </div>
         <div className="grid grid-cols-2 gap-4 mt-4">
           <div>
-            <label className="block text-sm text-gray-600">Author</label>
+            <label className="block text-sm text-gray-600">Author*</label>
             <input
               type="text"
               name="author"
               value={newsFormData.author}
               onChange={handleNewsChange}
+              className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-600">Hashtags (upto 3)</label>
+            <input
+              type="text"
+              name="hashtags"
+              value={newsFormData.hashtags.join(", ")}
+              onChange={handleNewsHashtagsChange}
+              placeholder="Enter hashtags separated by commas"
               className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
             />
           </div>
@@ -742,7 +803,7 @@ const Admin = () => {
               className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
             />
           </div>
-          <p>Upload picture</p>
+          <p>Upload picture*</p>
           <input
           onChange={(e) => handleImageSubmit(e, setNewsFormData)}
           className='p-3 border border-gray-300 rounded w-full'
@@ -768,7 +829,7 @@ const Admin = () => {
       </form>
         <div className='flex items-center'>
         <div className='overflow-x-auto flex-1'>
-          <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 mt-10 mb-4 flex'>
+          <div className=' grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 mt-10 mb-4 flex'>
             {news.map((news) => (
               <Link to={`../admin`} key={news._id} className='w-full bg-white flex-none rounded-lg overflow-hidden'>
              
@@ -804,7 +865,7 @@ const Admin = () => {
       <h3 className="text-xl font-bold mb-4 text-gray-700">Add Endorsment</h3>
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm text-gray-600">Endorsment Name</label>
+          <label className="block text-sm text-gray-600">Endorsment Name*</label>
           <input
             type="text"
             name="endorsmentName"
@@ -825,7 +886,7 @@ const Admin = () => {
         </div>
       </div>
       <div className="mt-4">
-        <label className="block text-sm text-gray-600">Feedback</label>
+        <label className="block text-sm text-gray-600">Feedback*</label>
         <textarea
           name="feedback"
           value={endorsmentFormData.feedback}
@@ -834,7 +895,7 @@ const Admin = () => {
         />
       </div>
       <div className="mt-4">
-        <label className="block text-sm text-gray-600">Description</label>
+        <label className="block text-sm text-gray-600">Description*</label>
         <textarea
           name="description"
           value={endorsmentFormData.description}
@@ -844,7 +905,7 @@ const Admin = () => {
       </div>
       <div className="grid grid-cols-2 gap-4 mt-4">
         <div>
-          <label className="block text-sm text-gray-600">Designation</label>
+          <label className="block text-sm text-gray-600">Designation*</label>
           <input
             type="text"
             name="designation"
@@ -854,7 +915,7 @@ const Admin = () => {
           />
         </div>
         <div>
-          <label className="block text-sm text-gray-600">Endorsment For</label>
+          <label className="block text-sm text-gray-600">Endorsment For*</label>
           <input
             type="text"
             name="endorsmentFor"
@@ -863,6 +924,17 @@ const Admin = () => {
             className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
           />
         </div>
+      </div>
+      <div>
+        <label className="block text-sm text-gray-600">Hashtags (upto 3)</label>
+        <input
+          type="text"
+          name="hashtags"
+          value={endorsmentFormData.hashtags.join(", ")}
+          onChange={handleEndorsementHashtagsChange}
+          placeholder="Enter hashtags separated by commas"
+          className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+        />
       </div>
       <div className="grid grid-cols-2 gap-4 mt-4">
       <div>
@@ -934,7 +1006,7 @@ const Admin = () => {
     </div>
 
     <div className="mt-4">
-        <label className="block text-sm text-gray-600">Logo</label>
+        <label className="block text-sm text-gray-600">Logo*</label>
         <input
           onChange={(e) => handleLogoSubmit(e, setEndorsmentFormData)}
           className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
@@ -950,7 +1022,7 @@ const Admin = () => {
         )}
       </div>
 
-      <p>Upload images</p>
+      <p>Upload images*</p>
       <input
         onChange={(e) => handleImageSubmit(e, setEndorsmentFormData)}
         className="p-3 border border-gray-300 rounded w-full"
@@ -1008,6 +1080,18 @@ const Admin = () => {
             <input type="text" id="vendorName" name="vendorName" value={vendorData.vendorName} onChange={handleChange} className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500" required />
           </div>
           <div>
+            <label htmlFor="hashtags" className="block text-sm text-gray-600 font-semibold">Hashtags (upto 3)</label>
+            <input
+              type="text"
+              id="hashtags"
+              name="hashtags"
+              value={vendorData.hashtags.join(", ")}
+              onChange={handleVendorHashtagsChange}
+              placeholder="Enter hashtags separated by commas"
+              className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <div>
             <label htmlFor="location" className="block text-sm text-gray-600 font-semibold">Location</label>
             <input type="text" id="location" name="location" value={vendorData.location} onChange={handleChange} className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500" required />
           </div>
@@ -1016,7 +1100,7 @@ const Admin = () => {
           <label htmlFor="description" className="block text-sm text-gray-600 font-semibold">Description</label>
           <textarea id="description" name="description" value={vendorData.description} onChange={handleChange} className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500" required />
         </div>
-        <p>Upload Picture</p>
+        <p>Upload Picture*</p>
           <input
             onChange={(e) => handleImageSubmit(e, setVendorData)}
             className="p-3 border border-gray-300 rounded w-full"
@@ -1025,7 +1109,7 @@ const Admin = () => {
             accept="image/*"
             multiple
           />
-          {eventFormData.imageUrls.map((url, index) => (
+          {vendorData.imageUrls.map((url, index) => (
             <div key={url}>
               <img src={url} className='h-[100px] w-[100px]' alt="Uploaded" />
 
@@ -1084,80 +1168,94 @@ const Admin = () => {
     </div>
       {/* Business Directory */}
       <form onSubmit={handleBusinessSubmit} className="p-6 mb-8 bg-white rounded-md shadow-md">
-        <h3 className="text-xl font-bold mb-4 text-gray-700">Add Business in Business Directory</h3>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm text-gray-600">Business Name</label>
-            <input
-              type="text"
-              name="businessName"
-              value={businessFormData.businessName}
-              onChange={handleBusinessChange}
-              className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-gray-600">Location</label>
-            <input
-              type="text"
-              name="location"
-              value={businessFormData.location}
-              onChange={handleBusinessChange}
-              className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-            />
-          </div>
-        </div>
-        <div className="mt-4">
-          <label className="block text-sm text-gray-600">Description</label>
-          <textarea
-            name="description"
-            value={businessFormData.description}
+      <h3 className="text-xl font-bold mb-4 text-gray-700">Add Business in Business Directory</h3>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm text-gray-600">Business Name*</label>
+          <input
+            type="text"
+            name="businessName"
+            value={businessFormData.businessName}
             onChange={handleBusinessChange}
             className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
           />
         </div>
-        <div className="grid grid-cols-2 gap-4 mt-4">
-          <div>
-            <label className="block text-sm text-gray-600">Email</label>
-            <input
-              type="text"
-              name="email"
-              value={businessFormData.email}
-              onChange={handleBusinessChange}
-              className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-gray-600">Phone Number</label>
-            <input
-              type="text"
-              name="phoneNumber"
-              value={businessFormData.phoneNumber}
-              onChange={handleBusinessChange}
-              className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-            />
-          </div>
+        <div>
+          <label className="block text-sm text-gray-600">Location*</label>
+          <input
+            type="text"
+            name="location"
+            value={businessFormData.location}
+            onChange={handleBusinessChange}
+            className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+          />
         </div>
-
-        <input
-          onChange={(e) => handleImageSubmit(e, setBusinessFormData)}
-          className='p-3 border border-gray-300 rounded w-full'
-          type='file'
-          id='images'
-          accept='image/*'
-          multiple
+      </div>
+      <div className="mt-4">
+        <label className="block text-sm text-gray-600">Description*</label>
+        <textarea
+          name="description"
+          value={businessFormData.description}
+          onChange={handleBusinessChange}
+          className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
         />
-       
-        <button
-          type="submit"
-          className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-700"
-        >
-          Create Business
-        </button>
-      </form>
+      </div>
+      <div className="grid grid-cols-2 gap-4 mt-4">
+        <div>
+          <label className="block text-sm text-gray-600">Email</label>
+          <input
+            type="text"
+            name="email"
+            value={businessFormData.email}
+            onChange={handleBusinessChange}
+            className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+          />
+        </div>
+        <div>
+          <label className="block text-sm text-gray-600">Phone Number</label>
+          <input
+            type="text"
+            name="phoneNumber"
+            value={businessFormData.phoneNumber}
+            onChange={handleBusinessChange}
+            className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+          />
+        </div>
+      </div>
+      
+      {/* Hashtag Input */}
+      <div className="mt-4">
+        <label className="block text-sm text-gray-600">Hashtags (up to 3)</label>
+        <input
+          type="text"
+          name="hashtags"
+          value={businessFormData.hashtags.join(", ")}
+          onChange={handleBusinessHashtagsChange}
+          className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+          placeholder="Enter hashtags separated by commas"
+        />
+      </div>
+
+      <input
+        onChange={(e) => handleImageSubmit(e, setBusinessFormData)}
+        className="p-3 border border-gray-300 rounded w-full"
+        type="file"
+        id="images"
+        accept="image/*"
+        multiple
+      />
+      
+      <button
+        type="submit"
+        className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-700"
+      >
+        Create Business
+      </button>
+    </form>
+
       <div className='flex items-center'>
       <div className='overflow-x-auto flex-1'>
-        <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 mt-10 flex'>
+        <div className=' grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 mt-10 flex'>
           {businesses.map((business) => (
             <Link to={`../admin`} key={business._id} className='w-full bg-white flex-none rounded-lg overflow-hidden'>
               {/* Business Image */}

@@ -1,84 +1,106 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'
-import { CiLocationOn } from "react-icons/ci";
-import { MdOutlineEmail } from "react-icons/md";
-import { IoIosCall } from "react-icons/io";
-import axios from 'axios'; 
+import { Link, useNavigate } from 'react-router-dom';
+import { CiSearch } from "react-icons/ci";
 
-const BusinessDirectory = () => {
-  const [businesses, setBusinesses] = useState([]);
+import axios from 'axios';
+
+const Endorsements = () => {
+  const [endorsements, setEndorsements] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchBusinesses = async () => {
+    // Scroll to the top when the component mounts
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    const fetchEndorsements = async () => {
       try {
-        const response = await axios.get('/api/business/get');
-        setBusinesses(response.data);
+        const response = await axios.get('/api/endorsment/get');
+        const data = response.data;
+        if (data.success === false) {
+          console.log(data.message);
+          // Handle error if needed
+          return;
+        }
+        setEndorsements(data || []);
       } catch (error) {
-        console.error('Error fetching businesses:', error);
+        console.error('Error fetching endorsements:', error);
+        // Handle error if needed
       }
     };
 
-    fetchBusinesses();
+    // Call the fetchEndorsements function
+    fetchEndorsements();
   }, []);
 
+  // Function to truncate description to 15 words
+  const truncateDescription = (description) => {
+    const words = description.split(' ');
+    if (words.length > 15) {
+      return words.slice(0, 15).join(' ') + '...';
+    }
+    return description;
+  };
+
   return (
-    <div className='py-2'>
-      <div className='max-w-[1512px] min-h-[306px] bg-[#F2F4F7] flex items-center justify-center px-0  '>
-        <h1 className='text-4xl font-semibold font-inter text-center leading-10 tracking-tighter'>Business Directory</h1>
+    <div className=' py-8'>
+      <div className='max-w-[max-w-full] min-h-[306px] bg-[#F2F4F7] flex items-center justify-center px-0 gap-12'>
+        <h1 className='text-4xl font-semibold font-inter text-center leading-10 tracking-tighter'>Endorsements</h1>
       </div>
-      <div className='py-2 px-4'>
-        <label htmlFor="search-input" className="sr-only">
-          Search for Businesses
+      <div className='mt-4 px-4 items-left  '>
+        <label htmlFor="email-address" className="sr-only">
+          <CiSearch />filter by zip code
         </label>
-        <div className="flex items-center space-x-2">
-          <input
-            id="search-input"
-            name="searchQuery"
-            type="text"
-            autoComplete="off"
-            className="flex-auto max-w-[300px] rounded-md border-2 bg-white/5 px-3.5 py-2 text-black shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
-            placeholder="Search for events/venue/artists"
-          />
-          <button
-            type="submit"
-            className="flex-none min-w-[64px] rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-          >
-            Search
-          </button>
-        </div>
-
-        <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 mt-10'>
-          {businesses.map((business) => (
-            <Link to={`/businessdirectorydetails/${business._id}`} key={business._id} className='w-full bg-white flex-none rounded-lg overflow-hidden'>
-              {/* Business Images */}
-              <div
-                className='w-full h-[144px] bg-cover bg-center rounded-t-lg'
-                style={{
-                  backgroundImage: `url(${business.imageUrls[0]})`, 
-                  width: '388px',
-                  height: '144px',
-                  borderRadius: '8px',
-                }}
-              ></div>
-
-              <div className='p-4 gap-4 text-left'>
-                <h2 className='text-lg font-semibold'>{business.businessName}</h2>
-                <p className='text-lg'>{business.description}</p>
-
-                <p className='text-sm py-2'>
-                  <div className='flex'><CiLocationOn /> Location: {business.location}</div>
-                  <div className='flex'><MdOutlineEmail /> Email: {business.email}</div>
-                  <div className='flex'><IoIosCall /> Number: {business.phoneNumber}</div>
-                </p>
+        <input
+          id="email-address"
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
+          className="min-w-[300px] flex-auto rounded-md border-2 bg-white/5 px-3.5 py-2 text-black shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset sm:text-sm sm:py-1  sm:leading-6 @media(min-width:300px){py-2}"
+          placeholder=" filter by zip code"
+        />
+        <button
+          type="submit"
+          className="flex-none rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm sm:mt-4 font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+        >
+          Search
+        </button>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 px-4 gap-8 mt-10">
+        {endorsements.map((endorsement, index) => (
+          <Link to={`/endorsmentdetail/${endorsement._id}`} key={index} className="w-full bg-white p-3 border border-gray flex-none rounded-lg overflow-hidden">
+            <div className="w-full h-[240px] bg-cover bg-center rounded-lg" style={{ backgroundImage: `url(${endorsement.imageUrls})` }}>
+            </div>
+            {/* Event Details */}
+            <div className="py-2 gap-4 text-left">
+              {/* Endorsement Name */}
+              <h2 className="text-lg font-semibold">{endorsement.endorsmentName}</h2>
+              <p className="text-sm py-1">
+                {endorsement.designation}
+              </p>
+              {/* Endorsement Feedback */}
+              <p className="text-sm font-semibold py-1">
+                "{truncateDescription(endorsement.feedback)}"
+              </p>
+              {/* Endorsement for */}
+              <h3 className="text-lg font-semibold">Endorsement for:</h3>
+              <div className='flex items-center'>
+                <img src={endorsement.logo} className='w-[48px] h-[48px]' alt="" />
+                <p className='font-inter text-md font-semibold leading-6 text-left ml-2'>{endorsement.endorsmentFor}</p>
               </div>
-
-            
-            </Link>
-          ))}
-        </div>
+              {endorsement.hashtags && endorsement.hashtags.length > 0 && (
+                <span className="block text-gray-500">
+                  {endorsement.hashtags.join(", ")}
+                </span>
+              )}
+            </div>
+          </Link>
+        ))}
       </div>
     </div>
-  )
+  );
 }
 
-export default BusinessDirectory;
+export default Endorsements;

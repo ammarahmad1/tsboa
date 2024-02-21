@@ -42,21 +42,29 @@ app.listen(5000, () => {
   console.log('Server is running on port 5000!!');
 });
 
-app.post('/api/buymembership', async (req, res) => {
-  const amount = 1000; // Amount in cents (10 dollars)
-  
-  try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount,
-      currency: 'usd',
-      payment_method_types: ['card'],
-    });
+app.post('/api/checkout/create-checkout-session', async (req, res) => {
+  const { price } = req.body;
 
-    res.status(200).json({ client_secret: paymentIntent.client_secret });
-  } catch (error) {
-    console.error('Error creating payment intent:', error);
-    res.status(500).send({ error: 'Error creating payment intent' });
-  }
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    line_items: [
+      {
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: 'Event Ticket', // Adjust based on your product name
+          },
+          unit_amount: price * 100, // Convert to cents
+        },
+        quantity: 1,
+      },
+    ],
+    mode: 'payment',
+    success_url: 'https://tsboa.org/', // Redirect URL after successful payment
+    cancel_url: 'https://dashboard.stripe.com/', // Redirect URL if payment is canceled
+  });
+
+  res.json({ id: session.id });
 });
 
 

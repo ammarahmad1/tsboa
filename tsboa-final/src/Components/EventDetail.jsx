@@ -13,7 +13,7 @@ import { useParams } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
 import axios from 'axios';
-
+import { loadStripe } from '@stripe/stripe-js';
 
 
 
@@ -78,6 +78,36 @@ const EventDetail = () => {
     },
   };
 
+  const handlePayment = async () => {
+    setLoading(true);
+    const stripe = await stripePromise;
+
+    // Call your backend to create a Checkout Session
+    const response = await fetch('/api/checkout/create-checkout-session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        price: event.data.offer , // Pass ticket price to backend
+      }),
+    });
+
+    const session = await response.json();
+
+    // Redirect to Checkout
+    const result = await stripe.redirectToCheckout({
+      sessionId: session.id,
+    });
+
+    if (result.error) {
+      console.error(result.error.message);
+      setLoading(false);
+    }
+  };
+
+  
+
   return (
     <div className='px-20 py-8 sm:px-4'>
     {/* Featured Article */}
@@ -136,13 +166,15 @@ const EventDetail = () => {
         </div>
         <div class="w-full py-2 h-auto flex flex-col justify-center items-center md:flex-row md:justify-between mt-6">
           <p class="flex items-center text-lg font-medium text-black">
-            <CiCalendarDate /> 25/11/2023
+            <CiCalendarDate /> {event && event.data.date} 
           </p>
           <button
-            className="w-full md:w-[112px] max-h-[48px] border border-[#0E214B] bg-[#0E214B] text-white rounded-md mt-4 md:mt-0"
-          >
-            Buy Now
-          </button>
+          className="w-full md:w-[112px] max-h-[48px] border border-[#0E214B] bg-[#0E214B] text-white rounded-md mt-4 md:mt-0"
+       
+          disabled={loading}
+        >
+          {loading ? 'Processing...' : 'Buy Now'}
+        </button>
         </div>
       </div>
 
@@ -158,12 +190,14 @@ const EventDetail = () => {
         </div>
         <div class="w-full py-2 h-auto flex flex-col justify-center items-center md:flex-row md:justify-between mt-6">
           <p class="flex items-center text-lg font-medium text-black">
-            <CiCalendarDate /> 25/11/2023
+            <CiCalendarDate /> {event && event.data.date} 
           </p>
           <button
             className="w-full md:w-[112px] max-h-[48px] border border-[#0E214B] bg-[#0E214B] text-white rounded-md mt-4 md:mt-0"
+       
+            disabled={loading}
           >
-            Buy Now
+            {loading ? 'Processing...' : 'Buy Now'}
           </button>
         </div>
       </div>

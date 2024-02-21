@@ -16,16 +16,17 @@ const businessSchema = new mongoose.Schema(
         },
         email: {
             type: String,
-            required: true,
+            required: false,
         },
         phoneNumber: {
             type: String, 
-            required: true,
+            required: false,
         },
         imageUrls:{
             type: Array,
             required: true,
         },
+        hashtags: [{ type: String }],
     }, { timestamps: true });
 
 const Business = mongoose.model('Business', businessSchema);
